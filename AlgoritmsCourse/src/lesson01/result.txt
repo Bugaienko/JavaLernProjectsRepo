@@ -1,0 +1,10 @@
+Root: Node 9
+inOrderTraversal:
+[1][2][3][6][7][9][10][11][12][14]
+Node 12
+inDirectTraversal:
+[9] [3] [2] [1] [7] [6] [10] [12] [11] [14]
+inReverseTraversal:
+[1] [2] [6] [7] [3] [11] [14] [12] [10] [9]
+
+Process finished with exit code 0
