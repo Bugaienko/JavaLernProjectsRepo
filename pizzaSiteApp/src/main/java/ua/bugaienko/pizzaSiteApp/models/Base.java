@@ -35,6 +35,7 @@ public class Base {
     public Base() {
     }
 
+
     public Base(String size, String name, double price) {
         this.size = size;
         this.name = name;

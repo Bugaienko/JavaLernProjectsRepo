@@ -40,6 +40,9 @@ public class Pizza {
     @JoinColumn(name = "base_id", referencedColumnName = "id")
     private Base base;
 
+    @ManyToMany(mappedBy = "favorites")
+    private List<Person> persons;
+
     public Pizza() {
     }
 
@@ -97,6 +100,14 @@ public class Pizza {
 
     public void setCafes(List<Cafe> cafes) {
         this.cafes = cafes;
+    }
+
+    public List<Person> getPersons() {
+        return persons;
+    }
+
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
     }
 
     @Override

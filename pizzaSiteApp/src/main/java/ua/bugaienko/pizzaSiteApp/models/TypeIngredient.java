@@ -58,6 +58,7 @@ public class TypeIngredient {
     }
 
 
+
     @Override
     public String toString() {
         return "TypeIngredient{" +
