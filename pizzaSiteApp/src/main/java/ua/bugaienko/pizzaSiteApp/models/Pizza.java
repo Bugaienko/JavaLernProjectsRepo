@@ -9,8 +9,8 @@ import java.util.List;
  */
 
 @Entity
-@Table(name = "ingredient")
-public class Ingredient {
+@Table(name = "pizza")
+public class Pizza {
 
     @Id
     @Column(name = "id")
@@ -20,23 +20,27 @@ public class Ingredient {
     @NotEmpty(message = "Name should be not empty")
     private String name;
     @Column(name = "price")
-    private Double price;
-
-    @ManyToOne
-    @JoinColumn(name = "type_id", referencedColumnName = "id")
-    private TypeIngredient type;
+    private double price;
     @Column(name = "image")
     private String image;
 
-    @ManyToMany(mappedBy = "ingredients")
-    private List<Pizza> pizzas;
+    @ManyToMany
+    @JoinTable(
+            name = "pizza_ingredient",
+            joinColumns = @JoinColumn(name = "pizza_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+    )
+    private List<Ingredient> ingredients;
 
-    public Ingredient() {
-    }
 
-    public Ingredient(String name, Double price) {
-        this.name = name;
-        this.price = price;
+    @ManyToMany(mappedBy = "pizzas")
+    private List<Cafe> cafes;
+
+    @ManyToOne
+    @JoinColumn(name = "base_id", referencedColumnName = "id")
+    private Base base;
+
+    public Pizza() {
     }
 
     public int getId() {
@@ -55,20 +59,12 @@ public class Ingredient {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
-    }
-
-    public TypeIngredient getType() {
-        return type;
-    }
-
-    public void setType(TypeIngredient type) {
-        this.type = type;
     }
 
     public String getImage() {
@@ -79,22 +75,38 @@ public class Ingredient {
         this.image = image;
     }
 
-    public List<Pizza> getPizzas() {
-        return pizzas;
+    public Base getBase() {
+        return base;
     }
 
-    public void setPizzas(List<Pizza> pizzas) {
-        this.pizzas = pizzas;
+    public void setBase(Base base) {
+        this.base = base;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public List<Cafe> getCafes() {
+        return cafes;
+    }
+
+    public void setCafes(List<Cafe> cafes) {
+        this.cafes = cafes;
     }
 
     @Override
     public String toString() {
-        return "Ingredient{" +
+        return "Pizza{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
-                ", type=" + type +
                 ", image='" + image + '\'' +
+                ", base=" + base +
                 '}';
     }
 }

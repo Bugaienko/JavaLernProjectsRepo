@@ -1,6 +1,7 @@
 package ua.bugaienko.pizzaSiteApp.models;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -11,6 +12,7 @@ import javax.persistence.Table;
 @Table(name = "person")
 public class Person {
 
+    @Id
     private int id;
 
     private String username;

@@ -1,5 +1,7 @@
 package ua.bugaienko.pizzaSiteApp.models;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -21,6 +23,7 @@ public class TypeIngredient {
     private String name;
 
     @OneToMany(mappedBy = "type")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private List<Ingredient> ingredients;
 
     public TypeIngredient() {
@@ -53,6 +56,7 @@ public class TypeIngredient {
     public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
+
 
     @Override
     public String toString() {
