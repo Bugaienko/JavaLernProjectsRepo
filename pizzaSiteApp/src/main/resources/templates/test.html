@@ -6,5 +6,10 @@
 </head>
 <body>
 <h2>Test page</h2>
+<h3>Ingredients</h3>
+<div th:each="ingr :${ingredients}">
+    <a th:href="@{/ingr/{id}(id=${ingr.id})}"
+        th:text="${ingr.name + ' : ' + ingr.price + ' ( ' + ingr.getType().getName() + ' )' }">text</a>
+</div>
 </body>
 </html>
