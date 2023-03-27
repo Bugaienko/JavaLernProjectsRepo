@@ -1,6 +1,5 @@
 package spring;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import spring.config.AppConfig;
 import spring.domain.Person;
