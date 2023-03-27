@@ -1,6 +1,6 @@
 package ua.bugaienko.pizzaSiteApp.controllers;
 
-import org.springframework.security.access.method.P;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.bugaienko.pizzaSiteApp.models.Person;
+import ua.bugaienko.pizzaSiteApp.services.PersonService;
+import ua.bugaienko.pizzaSiteApp.util.PersonValidator;
 
 import javax.validation.Valid;
 
@@ -18,6 +20,16 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
+
+    private final PersonValidator personValidator;
+    private final PersonService personService;
+
+    @Autowired
+    public AuthController(PersonValidator personValidator, PersonService personService) {
+        this.personValidator = personValidator;
+        this.personService = personService;
+    }
+
     @GetMapping("/login")
     public String loginPage() {
         return "auth/login";
@@ -30,7 +42,12 @@ public class AuthController {
 
     @PostMapping("/registration")
     public String createPerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult){
+        personValidator.validate(person, bindingResult);
 
+        if (bindingResult.hasErrors()) {
+            return "auth/registration";
+        }
+        personService.register(person);
 
         return "redirect:/auth/login";
     }

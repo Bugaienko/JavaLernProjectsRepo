@@ -31,4 +31,9 @@ public class HelloController {
         model.addAttribute("ingredients", ingredientService.findAll());
         return "test";
     }
+
+    @GetMapping("/admin")
+    public String testAdminPage(){
+        return "admin";
+    }
 }

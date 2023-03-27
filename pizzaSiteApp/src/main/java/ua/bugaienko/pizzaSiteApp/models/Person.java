@@ -21,7 +21,7 @@ public class Person {
     private int id;
 
     @Column(name = "username")
-    @Pattern(regexp = "([a-zA-Z]\\w+ \\D+){3,}", message = "The username must contain only letters, numbers, underscores. Not shorter than 3 characters.")
+    @Pattern(regexp = "([a-zA-Z]+[\\w\\s]*){3,}", message = "The username must contain only letters, numbers, underscores. Not shorter than 3 characters.")
     private String username;
     @Column(name = "password")
     @NotEmpty(message = "Password should be not empty")
