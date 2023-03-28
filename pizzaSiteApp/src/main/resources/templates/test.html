@@ -10,7 +10,7 @@
 <div th:each="ingr :${ingredients}">
     <a th:href="@{/ingr/{id}(id=${ingr.id})}"
         th:text="${ingr.name + ' : ' + ingr.price + ' ( ' + ingr.getType().getName() + ' )' }">text</a>
-    <img th:if="${ingr.image}" th:src="@{/img/{im}(im=${ingr.image})}" class="ingr-image" alt="Post Title"></a>
+    <img th:if="${ingr.image}" th:src="@{images}" class="ingr-image" alt="Post Title"></a>
 </div>
 </body>
 </html>
