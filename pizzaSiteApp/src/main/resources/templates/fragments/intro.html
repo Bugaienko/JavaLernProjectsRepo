@@ -7,14 +7,18 @@
             <div class="icon"><span class="icon-phone"></span></div>
             <div class="text">
               <h3 th:text="${cafe.phone}">tel</h3>
-              <p>A small river named Duden flows</p>
+              <p>
+                <a th:href="${'mailto:' + cafe.email}"
+                   th:text="${cafe.email}"
+                   th:target="_blank">email</a>
+              </p>
             </div>
           </div>
           <div class="col-md-4 d-flex ftco-animate">
             <div class="icon"><span class="icon-my_location"></span></div>
             <div class="text">
               <h3 th:text="${cafe.city}">Adr</h3>
-              <p>Suite 721 New York NY 10016</p>
+              <p th:text="${cafe.title}">title</p>
             </div>
           </div>
           <div class="col-md-4 d-flex ftco-animate">
