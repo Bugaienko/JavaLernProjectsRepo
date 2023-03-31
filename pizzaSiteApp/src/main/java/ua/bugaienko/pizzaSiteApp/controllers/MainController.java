@@ -1,17 +1,17 @@
 package ua.bugaienko.pizzaSiteApp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.bugaienko.pizzaSiteApp.models.Person;
-import ua.bugaienko.pizzaSiteApp.security.PersonDetails;
+import ua.bugaienko.pizzaSiteApp.models.Pizza;
 import ua.bugaienko.pizzaSiteApp.services.CafeService;
+import ua.bugaienko.pizzaSiteApp.services.PizzaService;
 import ua.bugaienko.pizzaSiteApp.util.UserUtil;
+
+import java.util.List;
 
 /**
  * @author Sergii Bugaienko
@@ -22,12 +22,14 @@ import ua.bugaienko.pizzaSiteApp.util.UserUtil;
 public class MainController {
 
     private final CafeService cafeService;
+    private final PizzaService pizzaService;
     private final UserUtil userUtil;
 
 
     @Autowired
-    public MainController(CafeService cafeService, UserUtil userUtil) {
+    public MainController(CafeService cafeService, PizzaService pizzaService, UserUtil userUtil) {
         this.cafeService = cafeService;
+        this.pizzaService = pizzaService;
         this.userUtil = userUtil;
     }
 
@@ -43,6 +45,8 @@ public class MainController {
     public String menuPage(Model model) {
         Person user = userUtil.getActiveUser();
         model.addAttribute("user", user);
+//        List<Pizza> pizzas = pizzaService.findAll();
+        model.addAttribute("pizzas", pizzaService.findAll());
         return "main/menu";
     }
 

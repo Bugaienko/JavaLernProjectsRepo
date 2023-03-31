@@ -5,22 +5,22 @@
 
 <nav th:replace="fragments/navbar :: navbar('login')"></nav>
 
-
-<section>
-    <container>
+<section class="ftco-section">
+    <div class="container">
         <div class="row justify-content-center mb-5 pb-3">
             <div class="col-md-7 heading-section ftco-animate text-center">
-                <h2>Login</h2>
+                <h2 class="mb-4">Login</h2>
                 <div class="form auth login">
                     <div th:replace="fragments/login_form"/>
                 </div>
             </div>
         </div>
-    </container>
+    </div>
 </section>
 
-<div th:replace="fragments/footer :: footer"></div>
-<div th:replace="fragments/loader"></div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="fragments/loader"></div>
 
 </body>
 </html>

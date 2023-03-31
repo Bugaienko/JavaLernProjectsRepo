@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.bugaienko.pizzaSiteApp.models.Cafe;
 import ua.bugaienko.pizzaSiteApp.repositiries.CafeRepository;
 
+import java.util.List;
+
 /**
  * @author Sergii Bugaienko
  */
@@ -22,6 +24,10 @@ public class CafeService {
 
     public Cafe findById(int id){
         return cafeRepository.findById(id).get();
+    }
+
+    public List<Cafe> findAll(){
+        return cafeRepository.findAll();
     }
 
 
