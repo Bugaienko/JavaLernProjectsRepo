@@ -10715,10 +10715,17 @@ h1, h2, h3, h4, h5,
     color: #000;
 }
 
+/*.btn.btn-primary:hover {*/
+/*    border: 1px solid #fac564;*/
+/*    background: transparent !important;*/
+/*    color: #fac564;*/
+/*}*/
+
+/*balu*/
 .btn.btn-primary:hover {
-    border: 1px solid #fac564;
-    background: transparent !important;
-    color: #fac564;
+    border: 1px solid black;
+    background: rgba(118, 232, 118, 1);
+    color: black;
 }
 
 .btn.btn-primary.btn-outline-primary {
@@ -11347,7 +11354,14 @@ h1, h2, h3, h4, h5,
     color: #fff5e8;
 }
 .form-text {
-    color: rgba(254,245,238, 0.90);
+    color: #76E876FF;
+}
+
+.balu-green {
+    color: #76E876FF !important;
+}
+.balu-green .medium{
+    font-size: medium;
 }
 
 textarea.form-control {

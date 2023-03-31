@@ -3,16 +3,18 @@
 
     <div class="mb-3">
         <label class="form-label" for="username">User name: </label>
-        <input class="form-control" type="text" name="username" id="username"/>
+        <input class="form-control" type="text" name="username" id="username" placeholder="Username"/>
         <div id="usernameHelp" class="form-text">must not contain special characters; min length is 3 characters</div>
     </div>
 
     <div class="mb-3">
         <label class="form-label" for="password">Login: </label>
-        <input class="form-control" type="password" name="password" id="password"/>
+        <input class="form-control" type="password" name="password" id="password" placeholder="password"/>
     </div>
-
+    <div class="mb-1 text-center">
         <input class="ml-2 btn btn-primary" type="submit" value="Login"/>
+        <a th:href="@{/auth/registration}" class="ml-3 btn btn-primary" th:text="'Sign up'"></a>
+    </div>
 
         <div th:if="${param.error}" style="color: red">
             Wrong username or password
