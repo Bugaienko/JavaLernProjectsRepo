@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header('Login')">Header</head>
+<head th:replace="fragments/header :: header('Logout')">Header</head>
 <body>
 
-<nav th:replace="fragments/navbar :: navbar('login')"></nav>
+<nav th:replace="fragments/navbar :: navbar('logout')"></nav>
 
 
 <section>
     <container>
         <div class="row justify-content-center mb-5 pb-3">
             <div class="col-md-7 heading-section ftco-animate text-center">
-                <h2>Login</h2>
-                <div class="form auth login">
-                    <div th:replace="fragments/login_form"/>
-                </div>
+                <h3>Do you really want to log out?</h3>
+                <form name="log" method="POST" th:action="@{/logout}">
+                    <input class="btn btn-primary p-3 px-xl-4 py-xl-3" type="submit" value="Logout"/>
+                </form>
             </div>
         </div>
     </container>
@@ -24,4 +24,3 @@
 
 </body>
 </html>
-

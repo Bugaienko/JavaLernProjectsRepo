@@ -2,6 +2,7 @@ package ua.bugaienko.pizzaSiteApp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ua.bugaienko.pizzaSiteApp.models.Person;
 import ua.bugaienko.pizzaSiteApp.services.PersonService;
 import ua.bugaienko.pizzaSiteApp.util.PersonValidator;
+import ua.bugaienko.pizzaSiteApp.util.UserUtil;
 
 import javax.validation.Valid;
 
@@ -23,11 +25,13 @@ public class AuthController {
 
     private final PersonValidator personValidator;
     private final PersonService personService;
+    private final UserUtil userUtil;
 
     @Autowired
-    public AuthController(PersonValidator personValidator, PersonService personService) {
+    public AuthController(PersonValidator personValidator, PersonService personService, UserUtil userUtil) {
         this.personValidator = personValidator;
         this.personService = personService;
+        this.userUtil = userUtil;
     }
 
     @GetMapping("/login")
@@ -50,6 +54,13 @@ public class AuthController {
         personService.register(person);
 
         return "redirect:/auth/login";
+    }
+
+    @GetMapping("/exit")
+    public String confirmLogout(Model model){
+        Person user = userUtil.getActiveUser();
+        model.addAttribute("user", user);
+        return "auth/exit";
     }
 
 }
