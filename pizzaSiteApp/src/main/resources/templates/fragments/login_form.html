@@ -1,15 +1,20 @@
 <form name="f" method="post" action="/process_login">
-  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
-  <label for="username">User name: </label>
-  <input type="text" name="username" id="username"/>
-  <br/>
-  <label for="password">Login: </label>
-  <input type="password" name="password" id="password"/>
-  <br/>
-  <input type="submit" value="Login"/>
+    <div class="mb-3">
+        <label class="form-label" for="username">User name: </label>
+        <input class="form-control" type="text" name="username" id="username"/>
+        <div id="usernameHelp" class="form-text">must not contain special characters; min length is 3 characters</div>
+    </div>
 
-  <div th:if="${param.error}" style="color: red">
-    Wrong username or password
-  </div>
+    <div class="mb-3">
+        <label class="form-label" for="password">Login: </label>
+        <input class="form-control" type="password" name="password" id="password"/>
+    </div>
+
+        <input class="ml-2 btn btn-primary" type="submit" value="Login"/>
+
+        <div th:if="${param.error}" style="color: red">
+            Wrong username or password
+        </div>
 </form>
