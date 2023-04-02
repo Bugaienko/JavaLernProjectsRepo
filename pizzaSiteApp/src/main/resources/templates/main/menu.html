@@ -20,13 +20,13 @@
                                role="tab" aria-controls="v-pills-1" aria-selected="true">Pizza</a>
 
                             <a class="nav-link" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-2" role="tab"
-                               aria-controls="v-pills-2" aria-selected="false">Drinks</a>
+                               aria-controls="v-pills-2" aria-selected="false">S size</a>
 
                             <a class="nav-link" id="v-pills-3-tab" data-toggle="pill" href="#v-pills-3" role="tab"
-                               aria-controls="v-pills-3" aria-selected="false">Burgers</a>
+                               aria-controls="v-pills-3" aria-selected="false">M size</a>
 
                             <a class="nav-link" id="v-pills-4-tab" data-toggle="pill" href="#v-pills-4" role="tab"
-                               aria-controls="v-pills-4" aria-selected="false">Pasta</a>
+                               aria-controls="v-pills-4" aria-selected="false">XL size</a>
                         </div>
                     </div>
                     <div class="col-md-12 d-flex align-items-center">
@@ -36,28 +36,32 @@
                             <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel"
                                  aria-labelledby="v-pills-1-tab">
                                 <div class="row">
-                                    <div th:each="pizza : ${pizzas}" class="col-md-4 text-center">
+                                    <div th:each="pizza : ${pizzas}" class="col-md-4 mb-3 text-center">
                                         <div class="menu-wrap">
-                                            <a href="#" class="menu-img img mb-4"
+                                            <a th:href="@{/pizza/{id}(id=${pizza.id})}" class="menu-img img mb-4"
                                                th:style="${'background-image: url(/images/pizza/'+pizza.image}+')'">
                                             </a>
                                             <div class="text">
                                                 <h3>
                                                     <a
-                                                        th:href="@{/pizza/{id}(id=${pizza.id})}"
-                                                        th:text="${pizza.name}"
-                                                >pizza name</a>
+                                                            th:href="@{/pizza/{id}(id=${pizza.id})}"
+                                                            th:text="${pizza.name}"
+                                                    >pizza name</a>
                                                 </h3>
                                                 <p>
-                                                  <span th:text="${pizza.getBase().getSize() + ' ' + pizza.getBase().name}"></span>
+                                                    <span th:text="${pizza.getBase().getSize() + ' ' + pizza.getBase().name}"></span>
                                                 </p>
                                                 <p>
                                                 <span th:each="ingr,iterStat : ${pizza.getIngredients()}">
                                                     <span th:text="${!iterStat.last ? ingr.name + ', ' : ingr.name}"></span>
                                                 </span>
                                                 </p>
-                                                <p class="price"><span th:text="${'€ ' + #numbers.formatDecimal(pizza.price, 0, 'COMMA', 2, 'POINT')}">$price</span></p>
-                                                <p><a th:href="@{/cafe/pizza/{pizzaId}(pizzaId=${pizza.id})}" class="btn btn-white btn-outline-white">Availability</a>
+                                                <p class="price"><span
+                                                        th:text="${'€ ' + #numbers.formatDecimal(pizza.price, 0, 'COMMA', 2, 'POINT')}">price</span>
+                                                </p>
+                                                <p>
+                                                    <a th:href="@{/cafe/pizza/{pizzaId}(pizzaId=${pizza.id})}"
+                                                       class="btn btn-white btn-outline-white">Availability</a>
                                                 </p>
                                             </div>
                                         </div>
@@ -99,7 +103,6 @@
                                         <div class="menu-wrap">
                                             <a href="#" class="menu-img img mb-4"
                                                th:style="'background-image: url(images/pizza-3.jpg)'">
-                                                <!--                         style="background-image: url(images/pizza-3.jpg);">-->
                                             </a>
                                             <div class="text">
                                                 <h3><a href="#">Itallian Pizza</a></h3>
@@ -114,36 +117,39 @@
                                 </div>
                             </div>
 
+                            <!--                         Small size-->
                             <div class="tab-pane fade" id="v-pills-2" role="tabpanel" aria-labelledby="v-pills-2-tab">
                                 <div class="row">
-                                    <div class="col-md-4 text-center">
+                                    <div th:each="pizza : ${pizzas_s}" class="col-md-4 mb-3 justify-content-center align-content-center text-center">
                                         <div class="menu-wrap">
-                                            <a href="#" class="menu-img img mb-4"
-                                               style="background-image: url(images/drink-1.jpg);"></a>
+                                            <a th:href="@{/pizza/{id}(id=${pizza.id})}" class="menu-img img mb-4"
+                                               th:style="${'background-image: url(/images/pizza/'+pizza.image}+')'">
+                                            </a>
                                             <div class="text">
-                                                <h3><a href="#">Lemonade Juice</a></h3>
-                                                <p>Far far away, behind the word mountains, far from the countries
-                                                    Vokalia and Consonantia.</p>
-                                                <p class="price"><span>$2.90</span></p>
-                                                <p><a href="#" class="btn btn-white btn-outline-white">Add to cart</a>
+                                                <h3>
+                                                    <a
+                                                            th:href="@{/pizza/{id}(id=${pizza.id})}"
+                                                            th:text="${pizza.name}"
+                                                    >pizza name</a>
+                                                </h3>
+                                                <p>
+                                                    <span th:text="${pizza.getBase().getSize() + ' ' + pizza.getBase().name}"></span>
+                                                </p>
+                                                <p>
+                                                <span th:each="ingr,iterStat : ${pizza.getIngredients()}">
+                                                    <span th:text="${!iterStat.last ? ingr.name + ', ' : ingr.name}"></span>
+                                                </span>
+                                                </p>
+                                                <p class="price"><span
+                                                        th:text="${'€ ' + #numbers.formatDecimal(pizza.price, 0, 'COMMA', 2, 'POINT')}">$price</span>
+                                                </p>
+                                                <p><a th:href="@{/cafe/pizza/{pizzaId}(pizzaId=${pizza.id})}"
+                                                      class="btn btn-white btn-outline-white">Availability</a>
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 text-center">
-                                        <div class="menu-wrap">
-                                            <a href="#" class="menu-img img mb-4"
-                                               style="background-image: url(images/drink-2.jpg);"></a>
-                                            <div class="text">
-                                                <h3><a href="#">Pineapple Juice</a></h3>
-                                                <p>Far far away, behind the word mountains, far from the countries
-                                                    Vokalia and Consonantia.</p>
-                                                <p class="price"><span>$2.90</span></p>
-                                                <p><a href="#" class="btn btn-white btn-outline-white">Add to cart</a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                     <div class="col-md-4 text-center">
                                         <div class="menu-wrap">
                                             <a href="#" class="menu-img img mb-4"
@@ -161,93 +167,73 @@
                                 </div>
                             </div>
 
+                            <!--                        Medium size-->
                             <div class="tab-pane fade" id="v-pills-3" role="tabpanel" aria-labelledby="v-pills-3-tab">
                                 <div class="row">
-                                    <div class="col-md-4 text-center">
+                                    <div th:each="pizza : ${pizzas_M}" class="col-md-4 mb-3 justify-content-center align-content-center text-center">
                                         <div class="menu-wrap">
-                                            <a href="#" class="menu-img img mb-4"
-                                               style="background-image: url(images/burger-1.jpg);"></a>
+                                            <a th:href="@{/pizza/{id}(id=${pizza.id})}" class="menu-img img mb-4"
+                                               th:style="${'background-image: url(/images/pizza/'+pizza.image}+')'">
+                                            </a>
                                             <div class="text">
-                                                <h3><a href="#">Itallian Pizza</a></h3>
-                                                <p>Far far away, behind the word mountains, far from the countries
-                                                    Vokalia and Consonantia.</p>
-                                                <p class="price"><span>$2.90</span></p>
-                                                <p><a href="#" class="btn btn-white btn-outline-white">Add to cart</a>
+                                                <h3>
+                                                    <a
+                                                            th:href="@{/pizza/{id}(id=${pizza.id})}"
+                                                            th:text="${pizza.name}"
+                                                    >pizza name</a>
+                                                </h3>
+                                                <p>
+                                                    <span th:text="${pizza.getBase().getSize() + ' ' + pizza.getBase().name}"></span>
+                                                </p>
+                                                <p>
+                                                <span th:each="ingr,iterStat : ${pizza.getIngredients()}">
+                                                    <span th:text="${!iterStat.last ? ingr.name + ', ' : ingr.name}"></span>
+                                                </span>
+                                                </p>
+                                                <p class="price"><span
+                                                        th:text="${'€ ' + #numbers.formatDecimal(pizza.price, 0, 'COMMA', 2, 'POINT')}">$price</span>
+                                                </p>
+                                                <p><a th:href="@{/cafe/pizza/{pizzaId}(pizzaId=${pizza.id})}"
+                                                      class="btn btn-white btn-outline-white">Availability</a>
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 text-center">
-                                        <div class="menu-wrap">
-                                            <a href="#" class="menu-img img mb-4"
-                                               style="background-image: url(images/burger-2.jpg);"></a>
-                                            <div class="text">
-                                                <h3><a href="#">Itallian Pizza</a></h3>
-                                                <p>Far far away, behind the word mountains, far from the countries
-                                                    Vokalia and Consonantia.</p>
-                                                <p class="price"><span>$2.90</span></p>
-                                                <p><a href="#" class="btn btn-white btn-outline-white">Add to cart</a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 text-center">
-                                        <div class="menu-wrap">
-                                            <a href="#" class="menu-img img mb-4"
-                                               style="background-image: url(images/burger-3.jpg);"></a>
-                                            <div class="text">
-                                                <h3><a href="#">Itallian Pizza</a></h3>
-                                                <p>Far far away, behind the word mountains, far from the countries
-                                                    Vokalia and Consonantia.</p>
-                                                <p class="price"><span>$2.90</span></p>
-                                                <p><a href="#" class="btn btn-white btn-outline-white">Add to cart</a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+
+
+
+
                                 </div>
                             </div>
 
+                            <!--                        Large size-->
                             <div class="tab-pane fade" id="v-pills-4" role="tabpanel" aria-labelledby="v-pills-4-tab">
                                 <div class="row">
-                                    <div class="col-md-4 text-center">
+                                    <div th:each="pizza : ${pizzas_Xl}" class="col-md-4 mb-3  justify-content-center align-content-center text-center">
                                         <div class="menu-wrap">
-                                            <a href="#" class="menu-img img mb-4"
-                                               style="background-image: url(images/pasta-1.jpg);"></a>
+                                            <a th:href="@{/pizza/{id}(id=${pizza.id})}" class="menu-img img mb-4"
+                                               th:style="${'background-image: url(/images/pizza/'+pizza.image}+')'">
+                                            </a>
                                             <div class="text">
-                                                <h3><a href="#">Itallian Pizza</a></h3>
-                                                <p>Far far away, behind the word mountains, far from the countries
-                                                    Vokalia and Consonantia.</p>
-                                                <p class="price"><span>$2.90</span></p>
-                                                <p><a href="#" class="btn btn-white btn-outline-white">Add to cart</a>
+                                                <h3>
+                                                    <a
+                                                            th:href="@{/pizza/{id}(id=${pizza.id})}"
+                                                            th:text="${pizza.name}"
+                                                    >pizza name</a>
+                                                </h3>
+                                                <p>
+                                                    <span th:text="${pizza.getBase().getSize() + ' ' + pizza.getBase().name}"></span>
                                                 </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 text-center">
-                                        <div class="menu-wrap">
-                                            <a href="#" class="menu-img img mb-4"
-                                               style="background-image: url(images/pasta-2.jpg);"></a>
-                                            <div class="text">
-                                                <h3><a href="#">Itallian Pizza</a></h3>
-                                                <p>Far far away, behind the word mountains, far from the countries
-                                                    Vokalia and Consonantia.</p>
-                                                <p class="price"><span>$2.90</span></p>
-                                                <p><a href="#" class="btn btn-white btn-outline-white">Add to cart</a>
+                                                <p>
+                                                <span th:each="ingr,iterStat : ${pizza.getIngredients()}">
+                                                    <span th:text="${!iterStat.last ? ingr.name + ', ' : ingr.name}"></span>
+                                                </span>
                                                 </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 text-center">
-                                        <div class="menu-wrap">
-                                            <a href="#" class="menu-img img mb-4"
-                                               style="background-image: url(images/pasta-3.jpg);"></a>
-                                            <div class="text">
-                                                <h3><a href="#">Itallian Pizza</a></h3>
-                                                <p>Far far away, behind the word mountains, far from the countries
-                                                    Vokalia and Consonantia.</p>
-                                                <p class="price"><span>$2.90</span></p>
-                                                <p><a href="#" class="btn btn-white btn-outline-white">Add to cart</a>
+                                                <p class="price"><span
+                                                        th:text="${'€ ' + #numbers.formatDecimal(pizza.price, 0, 'COMMA', 2, 'POINT')}">$price</span>
+                                                </p>
+                                                <p><a th:href="@{/cafe/pizza/{pizzaId}(pizzaId=${pizza.id})}"
+                                                      class="btn btn-white btn-outline-white">Availability</a>
                                                 </p>
                                             </div>
                                         </div>

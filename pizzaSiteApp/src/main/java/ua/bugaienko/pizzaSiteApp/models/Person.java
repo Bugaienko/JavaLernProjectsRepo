@@ -1,6 +1,5 @@
 package ua.bugaienko.pizzaSiteApp.models;
 
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;

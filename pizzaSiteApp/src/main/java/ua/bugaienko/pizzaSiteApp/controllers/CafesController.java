@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.bugaienko.pizzaSiteApp.models.Cafe;
+import ua.bugaienko.pizzaSiteApp.models.Person;
 import ua.bugaienko.pizzaSiteApp.models.Pizza;
 import ua.bugaienko.pizzaSiteApp.services.PizzaService;
 import ua.bugaienko.pizzaSiteApp.util.UserUtil;
@@ -32,7 +33,12 @@ public class CafesController {
 
     @GetMapping("/pizza/{pizzaId}")
     public String pizzaAvailability(@PathVariable("pizzaId") int pizzaId, Model model) {
-        model.addAttribute("user", userUtil.getActiveUser());
+        Person user = userUtil.getActiveUser();
+        model.addAttribute("user", user);
+        if (user == null) {
+            System.out.println("user -> null");
+            return "auth/needLogin";
+        }
         Pizza pizza = pizzaService.findById(pizzaId);
         List<Cafe> cafes = pizza.getCafes();
         System.out.println(cafes);

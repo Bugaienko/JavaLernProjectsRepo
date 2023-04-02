@@ -45,8 +45,10 @@ public class MainController {
     public String menuPage(Model model) {
         Person user = userUtil.getActiveUser();
         model.addAttribute("user", user);
-//        List<Pizza> pizzas = pizzaService.findAll();
         model.addAttribute("pizzas", pizzaService.findAll());
+        model.addAttribute("pizzas_s", pizzaService.findByPizzaSize("small"));
+        model.addAttribute("pizzas_M", pizzaService.findByPizzaSize("medium"));
+        model.addAttribute("pizzas_Xl", pizzaService.findByPizzaSize("large"));
         return "main/menu";
     }
 

@@ -11,12 +11,13 @@
         <label class="form-label" for="password">Login: </label>
         <input class="form-control" type="password" name="password" id="password" placeholder="password"/>
     </div>
+
     <div class="mb-1 text-center">
-        <input class="ml-2 btn btn-primary" type="submit" value="Login"/>
+        <input class="ml-3 btn btn-primary" type="submit" value="Login"/>
         <a th:href="@{/auth/registration}" class="ml-3 btn btn-primary" th:text="'Sign up'"></a>
     </div>
 
-        <div th:if="${param.error}" style="color: red">
-            Wrong username or password
-        </div>
+    <div th:if="${param.error}" style="color: red">
+        Wrong username or password
+    </div>
 </form>

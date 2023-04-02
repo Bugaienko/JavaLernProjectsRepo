@@ -1,6 +1,7 @@
 package ua.bugaienko.pizzaSiteApp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.bugaienko.pizzaSiteApp.models.Cafe;
@@ -27,7 +28,12 @@ public class PizzaService {
     }
 
     public List<Pizza> findAll(){
-        return pizzaRepository.findAll();
+//        return pizzaRepository.findAll();
+        return pizzaRepository.findAll(Sort.by(Sort.Order.by("name")).ascending());
+    }
+
+    public List<Pizza> findByPizzaSize(String size){
+        return pizzaRepository.findDistinctPizzaByBase_SizeLikeIgnoreCase(size, Sort.by("name").ascending());
     }
 
     public Pizza findById(int id){
