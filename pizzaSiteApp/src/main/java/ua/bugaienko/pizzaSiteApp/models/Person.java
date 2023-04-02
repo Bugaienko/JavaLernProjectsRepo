@@ -1,10 +1,17 @@
 package ua.bugaienko.pizzaSiteApp.models;
 
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.springframework.data.repository.cdi.Eager;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Sergii Bugaienko
@@ -29,6 +36,7 @@ public class Person {
     @NotEmpty(message = "Email should be not empty")
     private String email;
     @Column(name = "role")
+
     private String role;
     @Column(name = "avatar")
     private String avatar;
@@ -115,5 +123,10 @@ public class Person {
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
                 '}';
+    }
+
+    public static List<Pizza> deleteDublicates(List<Pizza> pizzas) {
+        Set<Pizza> set = new LinkedHashSet<>(pizzas);
+        return new ArrayList<>(set);
     }
 }

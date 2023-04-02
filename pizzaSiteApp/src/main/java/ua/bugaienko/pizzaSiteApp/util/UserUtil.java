@@ -20,7 +20,7 @@ public class UserUtil {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
             user = personDetails.getPerson();
-            System.out.println(user.getUsername());
+//            System.out.println(user.getUsername());
         }
         return user;
     }

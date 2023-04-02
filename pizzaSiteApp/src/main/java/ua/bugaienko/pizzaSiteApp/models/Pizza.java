@@ -1,5 +1,7 @@
 package ua.bugaienko.pizzaSiteApp.models;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -34,6 +36,7 @@ public class Pizza {
 
 
     @ManyToMany(mappedBy = "pizzas")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private List<Cafe> cafes;
 
     @ManyToOne
@@ -41,6 +44,7 @@ public class Pizza {
     private Base base;
 
     @ManyToMany(mappedBy = "favorites")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private List<Person> persons;
 
     public Pizza() {
