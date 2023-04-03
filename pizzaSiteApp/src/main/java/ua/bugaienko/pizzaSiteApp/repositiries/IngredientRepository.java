@@ -7,10 +7,12 @@ import ua.bugaienko.pizzaSiteApp.models.Ingredient;
 import ua.bugaienko.pizzaSiteApp.models.Pizza;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
 
     List<Ingredient> findByPizzas(Pizza pizza, Sort type);
 
+    Optional<Ingredient> findByName(String name);
 }

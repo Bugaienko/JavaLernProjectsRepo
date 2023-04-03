@@ -62,6 +62,10 @@ public class Ingredient {
         return price;
     }
 
+
+
+
+
     public void setPrice(Double price) {
         this.price = price;
     }
@@ -96,7 +100,7 @@ public class Ingredient {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
-                ", type=" + type +
+//                ", type=" + type.getName() +
                 ", image='" + image + '\'' +
                 '}';
     }
