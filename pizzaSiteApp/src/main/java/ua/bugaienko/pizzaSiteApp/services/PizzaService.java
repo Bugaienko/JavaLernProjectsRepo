@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.bugaienko.pizzaSiteApp.models.Base;
 import ua.bugaienko.pizzaSiteApp.models.Cafe;
+import ua.bugaienko.pizzaSiteApp.models.Ingredient;
 import ua.bugaienko.pizzaSiteApp.models.Pizza;
 import ua.bugaienko.pizzaSiteApp.repositiries.PizzaRepository;
 
@@ -27,27 +29,48 @@ public class PizzaService {
         this.pizzaRepository = pizzaRepository;
     }
 
-    public List<Pizza> findAll(){
-//        return pizzaRepository.findAll();
+    public List<Pizza> findAll() {
         return pizzaRepository.findAll(Sort.by(Sort.Order.by("name")).ascending());
     }
 
-    public List<Pizza> findByPizzaSize(String size){
+    public List<Pizza> findByPizzaSize(String size) {
         return pizzaRepository.findDistinctPizzaByBase_SizeLikeIgnoreCase(size, Sort.by("name").ascending());
     }
 
-    public Pizza findById(int id){
+    public Pizza findById(int id) {
         return pizzaRepository.findById(id).get();
     }
 
-    public List<Cafe> findCafesByPizzaId(int pizzaId){
+    public List<Cafe> findCafesByPizzaId(int pizzaId) {
         Pizza pizza;
         List<Cafe> cafes = new ArrayList<>();
         Optional<Pizza> pizzaOpt = pizzaRepository.findById(pizzaId);
-        if (pizzaOpt.isPresent()){
+        if (pizzaOpt.isPresent()) {
             pizza = pizzaOpt.get();
             cafes = pizza.getCafes();
         }
         return cafes;
+    }
+
+    public double getCalculatedPrice(Pizza pizza) {
+        List<Ingredient> ingredients = pizza.getIngredients();
+        Base base = pizza.getBase();
+        double multiplier = 1;
+        if (base.getSize().equalsIgnoreCase("medium")) {
+            multiplier = 1.3;
+        } else if (base.getSize().equalsIgnoreCase("large")) {
+            multiplier = 1.6;
+        }
+        double calcPrice = base.getPrice();
+        for (Ingredient ing : ingredients) {
+            calcPrice += ing.getPrice() * multiplier;
+        }
+        return calcPrice;
+    }
+
+    @Transactional
+    public void setNewPrice(Pizza pizza, double newPrice) {
+        pizza.setPrice(newPrice);
+        pizzaRepository.save(pizza);
     }
 }

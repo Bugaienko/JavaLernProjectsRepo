@@ -32,11 +32,6 @@ public class HelloController {
         return "test";
     }
 
-    @GetMapping("/admin")
-    public String testAdminPage(){
-        return "admin";
-    }
-
     @GetMapping("/ddd")
     public String debugPage() {
         return "temp/index";

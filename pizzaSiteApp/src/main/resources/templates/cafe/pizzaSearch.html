@@ -18,21 +18,24 @@
         <div class="row justify-content-center mb-5 pb-3">
             <div class="col-lg-6 d-flex ftco-animate">
                 <div class="services-wrap d-flex align-content-center">
-                    <a href="#" class="menu-img img mb-4"
+                    <a th:href="@{/pizza/{id}(id=${pizza.id})}" class="menu-img img mb-4"
                        th:style="${'background-image: url(/images/pizza/'+pizza.image}+')'">
 
                     </a>
                     <div class="text p-4">
                         <h3 th:text="${pizza.name}"></h3>
                         <p>
-                            <span th:text="${pizza.getBase().getSize() + ' ' + pizza.getBase().name}"></span>
-                            <span th:each="ingr,iterStat : ${pizza.getIngredients()}">
+                        <p class="white" th:text="${pizza.getBase().getSize() + ' ' + pizza.getBase().name}"></p>
+                        <span th:each="ingr,iterStat : ${pizza.getIngredients()}">
                             <span th:text="${!iterStat.last ? ingr.name + ', ' : ingr.name}"></span>
                         </span>
                         </p>
                         <p class="price">
                             <span th:text="${'€ ' + #numbers.formatDecimal(pizza.price, 0, 'COMMA', 2, 'POINT')}">$price</span>
-                            <a th:href="@{/menu}" class="ml-2 btn btn-white btn-outline-white">Menu</a>
+                        </p>
+                        <p>
+                            <a th:href="@{/pizza/{id}(id=${pizza.id})}" class="mr-2 btn btn-white btn-outline-white">Details</a>
+                            <a th:href="@{/menu}" class="mr-2 btn btn-white btn-outline-white">Menu</a>
                         </p>
                     </div>
                 </div>
@@ -81,9 +84,9 @@
                                 </p>
                             </div>
                         </div>
-                    <div>
-                        <p>We are waiting for you to visit</p>
-                    </div>
+                        <div>
+                            <p>We are waiting for you to visit</p>
+                        </div>
                     </div>
                 </div>
             </div>

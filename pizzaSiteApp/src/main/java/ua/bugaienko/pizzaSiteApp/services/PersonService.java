@@ -52,11 +52,6 @@ public class PersonService {
 //        List<Pizza> favorites = person.getFavorites();
         List<Pizza> favorites = pizzaRepository.findByPersons(person);
 
-        System.out.println("favorites: " + favorites);
-        if (favorites == null){
-            System.out.println("Null fav");
-            favorites = new ArrayList<>();
-        }
         favorites.add(pizza);
         person.setFavorites(Person.deleteDublicates(favorites));
         personRepository.save(person);

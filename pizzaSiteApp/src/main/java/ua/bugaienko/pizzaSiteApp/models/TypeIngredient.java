@@ -49,6 +49,7 @@ public class TypeIngredient {
         this.name = name;
     }
 
+
     public List<Ingredient> getIngredients() {
         return ingredients;
     }

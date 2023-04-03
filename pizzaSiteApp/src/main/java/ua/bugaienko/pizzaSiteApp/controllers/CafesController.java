@@ -36,12 +36,10 @@ public class CafesController {
         Person user = userUtil.getActiveUser();
         model.addAttribute("user", user);
         if (user == null) {
-            System.out.println("user -> null");
             return "auth/needLogin";
         }
         Pizza pizza = pizzaService.findById(pizzaId);
-        List<Cafe> cafes = pizza.getCafes();
-        System.out.println(cafes);
+//        List<Cafe> cafes = pizza.getCafes();
         model.addAttribute("pizza", pizza);
         return "cafe/pizzaSearch";
     }

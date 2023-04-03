@@ -29,7 +29,7 @@
                 </li>
                 <li class="nav-item" th:classappend="${page == 'menu'} ? 'active'"><a th:href="@{/menu}"
                                                                                       class="nav-link">Menu</a></li>
-                <li class="nav-item"><a th:href="@{/services}" class="nav-link">Services</a></li>
+                <li class="nav-item" th:classappend="${page == 'admin'} ? 'active'"><a th:href="@{/admin}" class="nav-link">Admin</a></li>
                 <li class="nav-item"><a th:href="@{/blog}" class="nav-link">Blog</a></li>
                 <li class="nav-item" th:classappend="${page == 'about'} ? 'active'"><a th:href="@{/about}"
                                                                                        class="nav-link">About</a></li>

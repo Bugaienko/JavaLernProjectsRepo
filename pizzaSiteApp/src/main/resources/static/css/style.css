@@ -12549,3 +12549,24 @@ textarea.form-control {
 .icon-favorite.white{
     color: white !important;
 }
+p.white{
+    color: white !important;
+}
+span.white{
+    color: white !important;
+}
+.pizza-img {
+    max-width: 100%;
+}
+.pizza-detail-type{
+    color: #fac564 !important;
+    margin-top: 5px;
+    margin-bottom: 2px;
+    tab-size: 0.8rem;
+}
+.balu-yellow {
+    color: #fac564 !important;;
+}
+p.balu-yellow{
+    color: #fac564 !important;
+}

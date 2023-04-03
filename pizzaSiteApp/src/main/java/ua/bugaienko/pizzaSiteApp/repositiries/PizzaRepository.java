@@ -11,9 +11,6 @@ import java.util.List;
 @Repository
 public interface PizzaRepository extends JpaRepository<Pizza, Integer> {
 
-    public List<Pizza> findDistinctPizzaByBase_SizeContainingIgnoreCase(String size);
-
-    public List<Pizza> findDistinctPizzaByBase_SizeLikeIgnoreCase(String size, Sort name);
-
-    public List<Pizza> findByPersons(Person person);
+    List<Pizza> findDistinctPizzaByBase_SizeLikeIgnoreCase(String size, Sort name);
+    List<Pizza> findByPersons(Person person);
 }
