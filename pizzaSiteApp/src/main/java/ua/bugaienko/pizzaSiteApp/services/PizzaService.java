@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.bugaienko.pizzaSiteApp.models.Base;
-import ua.bugaienko.pizzaSiteApp.models.Cafe;
-import ua.bugaienko.pizzaSiteApp.models.Ingredient;
-import ua.bugaienko.pizzaSiteApp.models.Pizza;
+import ua.bugaienko.pizzaSiteApp.models.*;
 import ua.bugaienko.pizzaSiteApp.repositiries.PizzaRepository;
 
 import java.util.ArrayList;
@@ -81,5 +78,9 @@ public class PizzaService {
 
     public Optional<Pizza> findByName(String name) {
         return pizzaRepository.findByName(name);
+    }
+
+    public List<Pizza> findByPerson(Person person) {
+        return pizzaRepository.findByPersons(person);
     }
 }

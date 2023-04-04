@@ -58,6 +58,14 @@ public class Person {
         this.email = email;
     }
 
+    public List<Pizza> getSortedPizza(){
+        List<Pizza> pizzas = this.favorites;
+        pizzas.sort(((o1, o2) -> {
+            return (int) (o1.getPrice() - o2.getPrice());
+        }));
+        return pizzas;
+    }
+
     public int getId() {
         return id;
     }
