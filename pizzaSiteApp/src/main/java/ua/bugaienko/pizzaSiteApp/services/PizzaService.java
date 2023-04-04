@@ -73,4 +73,9 @@ public class PizzaService {
         pizza.setPrice(newPrice);
         pizzaRepository.save(pizza);
     }
+
+    @Transactional
+    public Pizza create(Pizza pizza) {
+        return pizzaRepository.save(pizza);
+    }
 }
