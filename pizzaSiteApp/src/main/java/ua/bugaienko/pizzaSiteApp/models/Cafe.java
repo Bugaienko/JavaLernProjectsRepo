@@ -55,6 +55,14 @@ public class Cafe {
         this.closeAt = closeAt;
     }
 
+    public List<Pizza> getSortedPizza(){
+        List<Pizza> pizzas = this.pizzas;
+        pizzas.sort(((o1, o2) -> {
+            return (int) (o1.getPrice() - o2.getPrice());
+        }));
+        return pizzas;
+    }
+
     public int getId() {
         return id;
     }

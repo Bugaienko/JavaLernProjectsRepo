@@ -11097,6 +11097,13 @@ h1, h2, h3, h4, h5,
     padding-right: 20px;
 }
 
+/*balu*/
+.pricing-entry .text h3 a {
+    background: #121618;
+    background: url(../images/bg_4.jpg) no-repeat fixed;
+    padding-right: 16px;
+}
+
 .pricing-entry .text .price {
     width: 80px;
     color: #fac564;
