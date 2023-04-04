@@ -8,6 +8,7 @@ import ua.bugaienko.pizzaSiteApp.models.TypeIngredient;
 import ua.bugaienko.pizzaSiteApp.repositiries.TypesRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Sergii Bugaienko
@@ -25,5 +26,16 @@ public class TypeService {
 
     public List<TypeIngredient> findAllSorted(){
         return typesRepository.findAll(Sort.by("id").ascending());
+    }
+
+    @Transactional
+    public void create(TypeIngredient type) {
+        TypeIngredient newType = new TypeIngredient(type.getName());
+//        System.out.println(newType);
+        typesRepository.save(newType);
+    }
+
+    public Optional<TypeIngredient> findByName(String name) {
+        return typesRepository.findByName(name);
     }
 }

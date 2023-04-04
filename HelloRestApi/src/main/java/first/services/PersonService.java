@@ -1,5 +1,6 @@
 package first.services;
 
+import first.controller.vo.PersonVO;
 import first.domain.Person;
 import first.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,13 @@ public class PersonService {
     @Transactional
     public void add(Person person) {
         personRepository.save(person);
+    }
+
+    @Transactional
+    public PersonVO add(PersonVO personVO){
+        Person newPerson = new Person(personVO.getSurName(), personVO.getName());
+        newPerson = personRepository.save(newPerson);
+        return PersonVO.valueOf(newPerson);
     }
 
     @Transactional
