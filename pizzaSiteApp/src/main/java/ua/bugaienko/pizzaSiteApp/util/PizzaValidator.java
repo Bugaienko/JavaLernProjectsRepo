@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import ua.bugaienko.pizzaSiteApp.models.Pizza;
 import ua.bugaienko.pizzaSiteApp.models.TypeIngredient;
-import ua.bugaienko.pizzaSiteApp.services.IngredientService;
+import ua.bugaienko.pizzaSiteApp.services.PizzaService;
 import ua.bugaienko.pizzaSiteApp.services.TypeService;
 
 import java.util.Optional;
@@ -15,27 +16,26 @@ import java.util.Optional;
  */
 
 @Component
-public class TypeValidator implements Validator {
+public class PizzaValidator implements Validator {
 
 
-    private final TypeService typeService;
+    private final PizzaService pizzaService;
 
     @Autowired
-    public TypeValidator(TypeService typeService) {
-        this.typeService = typeService;
+    public PizzaValidator(PizzaService pizzaService) {
+        this.pizzaService = pizzaService;
     }
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return TypeIngredient.class.equals(clazz);
+        return Pizza.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        TypeIngredient newType = (TypeIngredient) target;
+        Pizza newPizza = (Pizza) target;
 
-        Optional<TypeIngredient> resultByName = typeService.findByName(newType.getName());
-
+        Optional<Pizza> resultByName = pizzaService.findByName(newPizza.getName());
 
         if (resultByName.isPresent()) {
             errors.rejectValue("name", "", "This name is already in use. Choose another");

@@ -78,4 +78,8 @@ public class PizzaService {
     public Pizza create(Pizza pizza) {
         return pizzaRepository.save(pizza);
     }
+
+    public Optional<Pizza> findByName(String name) {
+        return pizzaRepository.findByName(name);
+    }
 }

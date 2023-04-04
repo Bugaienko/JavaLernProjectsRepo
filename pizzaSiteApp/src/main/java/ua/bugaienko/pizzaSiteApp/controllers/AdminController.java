@@ -9,14 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.bugaienko.pizzaSiteApp.models.*;
-import ua.bugaienko.pizzaSiteApp.services.BaseService;
-import ua.bugaienko.pizzaSiteApp.services.IngredientService;
-import ua.bugaienko.pizzaSiteApp.services.PizzaService;
-import ua.bugaienko.pizzaSiteApp.services.TypeService;
-import ua.bugaienko.pizzaSiteApp.util.BaseValidator;
-import ua.bugaienko.pizzaSiteApp.util.IngredientValidator;
-import ua.bugaienko.pizzaSiteApp.util.TypeValidator;
-import ua.bugaienko.pizzaSiteApp.util.UserUtil;
+import ua.bugaienko.pizzaSiteApp.services.*;
+import ua.bugaienko.pizzaSiteApp.util.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,20 +28,24 @@ public class AdminController {
     private final IngredientService ingredientService;
     private final BaseService baseService;
     private final PizzaService pizzaService;
+    private final CafeService cafeService;
     private final IngredientValidator ingredientValidator;
     private final TypeValidator typeValidator;
     private final BaseValidator baseValidator;
+    private final PizzaValidator pizzaValidator;
 
     @Autowired
-    public AdminController(UserUtil userUtil, TypeService typeService, IngredientService ingredientService, BaseService baseService, PizzaService pizzaService, IngredientValidator ingredientValidator, TypeValidator typeValidator, BaseValidator baseValidator) {
+    public AdminController(UserUtil userUtil, TypeService typeService, IngredientService ingredientService, BaseService baseService, PizzaService pizzaService, CafeService cafeService, IngredientValidator ingredientValidator, TypeValidator typeValidator, BaseValidator baseValidator, PizzaValidator pizzaValidator) {
         this.userUtil = userUtil;
         this.typeService = typeService;
         this.ingredientService = ingredientService;
         this.baseService = baseService;
         this.pizzaService = pizzaService;
+        this.cafeService = cafeService;
         this.ingredientValidator = ingredientValidator;
         this.typeValidator = typeValidator;
         this.baseValidator = baseValidator;
+        this.pizzaValidator = pizzaValidator;
     }
 
     @GetMapping()
@@ -155,6 +153,8 @@ public class AdminController {
     @PostMapping("/add/pizza")
     public String creatPizza(@ModelAttribute("pizza")@Valid Pizza pizza, BindingResult bindingResult, Model model){
         model.addAttribute("user", userUtil.getActiveUser());
+        pizzaValidator.validate(pizza, bindingResult);
+
         if (bindingResult.hasErrors()) {
             List<Ingredient> ingredients = ingredientService.findAllSort();
             List<Base> bases = baseService.findAllSorted();
@@ -168,6 +168,33 @@ public class AdminController {
         if (newPizza != null) {
             return "redirect:/pizza/" + newPizza.getId();
         }
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/add/cafe")
+    public String addCafe(@ModelAttribute("cafe") Cafe cafe, Model model){
+        Person user = userUtil.getActiveUser();
+        model.addAttribute("user", user);
+        if (!user.getRole().toLowerCase().contains("admin")) {
+            return "admin/accessDenied";
+        }
+        return "admin/addCafe";
+    }
+
+    @PostMapping("/add/cafe")
+    public String createCafe(@ModelAttribute("cafe")@Valid Cafe cafe, BindingResult bindingResult, Model model){
+        model.addAttribute("user", userUtil.getActiveUser());
+
+        if(bindingResult.hasErrors()){
+            return "admin/addCafe";
+        }
+
+        Cafe newCafe = cafeService.create(cafe);
+        System.out.println(newCafe);
+        if (newCafe != null) {
+            return "redirect:/cafe/"+newCafe.getId();
+        }
+
         return "redirect:/admin";
     }
 

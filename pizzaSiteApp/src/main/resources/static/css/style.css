@@ -10855,6 +10855,7 @@ h1, h2, h3, h4, h5,
     font-size: 20px;
 }
 
+
 .ftco-about .one-half {
     width: 100%;
     padding: 30px 15px;
@@ -12567,10 +12568,18 @@ span.white{
 .balu-yellow {
     color: #fac564 !important;;
 }
+.balu-black {
+    color: black !important;;
+}
 p.balu-yellow{
     color: #fac564 !important;
 }
 
 .form-control.no-size{
     height: fit-content !important;
+}
+
+.one-half {
+    width: 100%;
+    padding: 30px 15px;
 }
