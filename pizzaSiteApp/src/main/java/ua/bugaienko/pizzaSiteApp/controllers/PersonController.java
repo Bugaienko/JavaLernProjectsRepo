@@ -33,7 +33,7 @@ import java.util.List;
         Person user = userUtil.getActiveUser();
         List<Pizza> pizzas = pizzaService.findByPerson(user);
         user.setFavorites(pizzas);
-        
+
         model.addAttribute("user", user);
         model.addAttribute("pizzas", user.getSortedPizza());
         return "person/user";
