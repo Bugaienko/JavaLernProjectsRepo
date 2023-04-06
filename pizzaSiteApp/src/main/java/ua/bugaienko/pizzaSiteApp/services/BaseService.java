@@ -36,7 +36,17 @@ public class BaseService {
         baseRepository.save(newBase);
     }
 
-    public List<Base> findAllSorted(){
+    public List<Base> findAllSorted() {
         return baseRepository.findAll(Sort.by("size").and(Sort.by("name")));
+    }
+
+    public Base findById(int baseId) {
+        return baseRepository.findById(baseId).get();
+    }
+
+
+    @Transactional
+    public Base update(Base base) {
+        return baseRepository.save(base);
     }
 }

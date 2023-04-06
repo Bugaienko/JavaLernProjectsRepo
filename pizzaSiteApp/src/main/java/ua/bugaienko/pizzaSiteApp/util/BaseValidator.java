@@ -32,11 +32,11 @@ public class BaseValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Base newBase = (Base) target;
-        Optional<Base> resultByName = baseService.findByName(newBase.getName());
+//        Optional<Base> resultByName = baseService.findByName(newBase.getName());
 
-        if (resultByName.isPresent()) {
-            errors.rejectValue("name", "", "This name is already in use. Choose another");
-        }
+//        if (resultByName.isPresent()) {
+//            errors.rejectValue("name", "", "This name is already in use. Choose another");
+//        }
 
     }
 }

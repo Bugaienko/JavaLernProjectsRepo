@@ -40,9 +40,8 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="avatar">Avatar: </label>
-                            <input class="form-control" type="file" name="avatar" id="avatar" />
-                            <div class="form-text" style="color:red" th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}">Year of
-                                birth Error
+                            <input class="form-control" type="file" name="file" id="avatar" />
+                            <div class="form-text" style="color:red" th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}">
                             </div>
                         </div>
 

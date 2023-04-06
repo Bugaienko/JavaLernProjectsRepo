@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header('Add Base')">Header</head>
+<head th:replace="fragments/header :: header('Edit Base')">Header</head>
 <body>
 
 <nav th:replace="fragments/navbar :: navbar('admin')"></nav>
@@ -8,14 +8,15 @@
 <section class="ftco-section" th:style="'background-image: url(/images/bg_1.jpg)'">
     <div class="container">
         <div class="row justify-content-center flex-column align-content-center text-center mb-5 pb-3">
-            <h2 class="balu-green">Add Base</h2>
+            <h2 class="balu-green">Edit Base</h2>
         </div>
 
         <div th:style="'background-image: url(/images/bg_4.jpg)'">
             <div class="row d-flex flex-column justify-content-center align-content-center mt-3">
                 <div class="col-md-8 justify-content-center p-5">
-                    <form th:method="POST" th:action="@{/admin/add/base}" th:object="${base}"
+                    <form th:method="PATCH" th:action="@{/admin/base/edit/{id}(id=${base.id})}" th:object="${base}"
                           xmlns="http://www.w3.org/1999/html">
+
                         <div class="mb-3">
                             <label class="form-label" for="name">Base name: </label>
                             <input class="form-control" type="text" th:field="*{name}" id="name"
@@ -25,7 +26,7 @@
                                 Name Error
                             </div>
                             <div class="mb-3">
-                                <label for="size" class="form-label">Size</label>
+                                <label for="size" class="form-label">Base size</label>
                                 <select class="form-control" th:object="${base}" th:field="*{size}" id="size">
                                     <option th:value="'Small'"
                                             th:text="'Small'">
@@ -49,7 +50,7 @@
                         </div>
 
                         <div class="mb-1 text-center">
-                            <input class="ml-3 btn btn-primary" type="submit" value="Create"/>
+                            <input class="ml-3 btn btn-primary" type="submit" value="Update"/>
                             <a th:href="@{/admin}" class="ml-3 btn btn-primary" th:text="'Back'"></a>
                         </div>
                     </form>

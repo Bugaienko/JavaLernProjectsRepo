@@ -1,5 +1,7 @@
 package ua.bugaienko.pizzaSiteApp.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,7 +12,6 @@ import ua.bugaienko.pizzaSiteApp.models.Pizza;
 import ua.bugaienko.pizzaSiteApp.repositiries.PersonRepository;
 import ua.bugaienko.pizzaSiteApp.repositiries.PizzaRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class PersonService {
-
+    static final Logger logger = LoggerFactory.getLogger(PersonService.class);
     private final PersonRepository personRepository;
     private final PizzaRepository pizzaRepository;
     private final PasswordEncoder passwordEncoder;
@@ -45,6 +46,7 @@ public class PersonService {
     public Person register(Person person) {
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         person.setRole("ROLE_USER");
+        logger.info("Add new Person, personId={}", person.getId());
         return personRepository.save(person);
     }
 
@@ -56,8 +58,9 @@ public class PersonService {
         if (!favorites.contains(pizza)) {
             favorites.add(pizza);
         }
-            person.setFavorites(favorites);
-            personRepository.save(person);
+        person.setFavorites(favorites);
+        logger.info("Add Fav pizza{} to Person, personId={}",pizza.getId(), person.getId());
+        personRepository.save(person);
     }
 
     @Transactional
@@ -65,6 +68,8 @@ public class PersonService {
         List<Pizza> favorites = pizzaRepository.findByPersons(person);
         favorites.remove(pizza);
         person.setFavorites(favorites);
+        logger.info("Del pizza{} from Person id={} Fav", pizza.getId(), person.getId());
+
         personRepository.save(person);
     }
 }

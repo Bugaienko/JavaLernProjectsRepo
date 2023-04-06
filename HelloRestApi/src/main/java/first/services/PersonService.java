@@ -3,6 +3,8 @@ package first.services;
 import first.controller.vo.PersonVO;
 import first.domain.Person;
 import first.repository.PersonRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class PersonService {
     private final PersonRepository personRepository;
+    static final Logger logger = LoggerFactory.getLogger(PersonService.class);
 
     @Autowired
     public PersonService(PersonRepository personRepository) {
@@ -28,20 +31,24 @@ public class PersonService {
     }
 
     @Transactional
-    public void add(Person person) {
-        personRepository.save(person);
+    public Person add(Person person) {
+        Person newPerson = personRepository.save(person);
+        logger.info("Add new Person, personId={}", newPerson.getId());
+        return newPerson;
     }
 
     @Transactional
     public PersonVO add(PersonVO personVO){
         Person newPerson = new Person(personVO.getSurName(), personVO.getName());
         newPerson = personRepository.save(newPerson);
+        logger.info("Add new Person, personId={}", newPerson.getId());
         return PersonVO.valueOf(newPerson);
     }
 
     @Transactional
     public void delete(int id) {
         personRepository.deleteById(id);
+        logger.info("Delete Person, personId={}", id);
     }
 
     public Person getById(int id) {
@@ -54,5 +61,6 @@ public class PersonService {
         person.setName(personDataForUpdate.getName());
         person.setSurName(personDataForUpdate.getSurName());
         personRepository.save(person);
+        logger.info("Update Person, personId={}", person.getId());
     }
 }

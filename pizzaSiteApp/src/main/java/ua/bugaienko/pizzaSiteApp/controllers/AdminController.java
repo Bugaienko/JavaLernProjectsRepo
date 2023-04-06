@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ua.bugaienko.pizzaSiteApp.models.*;
 import ua.bugaienko.pizzaSiteApp.services.*;
 import ua.bugaienko.pizzaSiteApp.util.*;
@@ -49,7 +46,7 @@ public class AdminController {
     }
 
     @GetMapping()
-    public String indexAdmin(Model model){
+    public String indexAdmin(Model model) {
         Person user = userUtil.getActiveUser();
         model.addAttribute("user", user);
         if (!user.getRole().toLowerCase().contains("admin")) {
@@ -61,8 +58,8 @@ public class AdminController {
 
     @GetMapping("/add/ingredient")
     public String addIngredient(Model model,
-                                @ModelAttribute("ingredient")Ingredient ingredient,
-                                @ModelAttribute("type") TypeIngredient typeIngredient){
+                                @ModelAttribute("ingredient") Ingredient ingredient,
+                                @ModelAttribute("type") TypeIngredient typeIngredient) {
         Person user = userUtil.getActiveUser();
         model.addAttribute("user", user);
         if (!user.getRole().toLowerCase().contains("admin")) {
@@ -89,7 +86,7 @@ public class AdminController {
     }
 
     @GetMapping("/add/type_ingredient")
-    public String addTypeIngredient(@ModelAttribute("type") TypeIngredient type, Model model){
+    public String addTypeIngredient(@ModelAttribute("type") TypeIngredient type, Model model) {
         Person user = userUtil.getActiveUser();
         model.addAttribute("user", user);
         if (!user.getRole().toLowerCase().contains("admin")) {
@@ -98,7 +95,7 @@ public class AdminController {
         return "admin/addTypeIngredient";
     }
 
-    @PostMapping ("/add/type_ingredient")
+    @PostMapping("/add/type_ingredient")
     public String createType(@ModelAttribute("type") @Valid TypeIngredient type, BindingResult bindingResult, Model model) {
         typeValidator.validate(type, bindingResult);
 
@@ -111,7 +108,7 @@ public class AdminController {
     }
 
     @GetMapping("/add/base")
-    public  String addBase(@ModelAttribute("base")Base base, Model model){
+    public String addBase(@ModelAttribute("base") Base base, Model model) {
         Person user = userUtil.getActiveUser();
         model.addAttribute("user", user);
         if (!user.getRole().toLowerCase().contains("admin")) {
@@ -121,21 +118,53 @@ public class AdminController {
     }
 
     @PostMapping("add/base")
-    public String createBase(@ModelAttribute("base") @Valid Base base, BindingResult bindingResult, Model model){
+    public String createBase(@ModelAttribute("base") @Valid Base base, BindingResult bindingResult, Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
         baseValidator.validate(base, bindingResult);
-        if (bindingResult.hasErrors()){
-            model.addAttribute("user", userUtil.getActiveUser());
+        if (bindingResult.hasErrors()) {
             return "admin/addBase";
         }
         baseService.create(base);
         return "redirect:/admin";
     }
 
+    @GetMapping("base/edit")
+    public String choiceBase(@ModelAttribute("base") Base base, Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+
+        List<Base> bases = baseService.findAllSorted();
+        model.addAttribute("bases", bases);
+        return "admin/choiceBase";
+    }
+
+    @PostMapping("base/edit")
+    public String editBase(@ModelAttribute("base") Base base, Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        Base base1 = baseService.findById(base.getId());
+        model.addAttribute("base", base1);
+        return "admin/editBase";
+    }
+
+    @PatchMapping("base/edit/{id}")
+    public String updateBase(@ModelAttribute("base") @Valid Base base, BindingResult bindingResult,
+                             @PathVariable("id") int baseId, Model model) {
+
+        model.addAttribute("user", userUtil.getActiveUser());
+
+        if (bindingResult.hasErrors()) {
+            return "admin/editBase";
+        }
+
+        baseService.update(base);
+        return "redirect:/admin";
+
+    }
+
     @GetMapping("/add/pizza")
     public String addPizza(@ModelAttribute("pizza") Pizza pizza,
                            @ModelAttribute("base") Base base,
                            @ModelAttribute("ingredient") Ingredient ingredient,
-                           Model model){
+                           Model model) {
         Person user = userUtil.getActiveUser();
         model.addAttribute("user", user);
         if (!user.getRole().toLowerCase().contains("admin")) {
@@ -151,7 +180,7 @@ public class AdminController {
     }
 
     @PostMapping("/add/pizza")
-    public String creatPizza(@ModelAttribute("pizza")@Valid Pizza pizza, BindingResult bindingResult, Model model){
+    public String creatPizza(@ModelAttribute("pizza") @Valid Pizza pizza, BindingResult bindingResult, Model model) {
         model.addAttribute("user", userUtil.getActiveUser());
         pizzaValidator.validate(pizza, bindingResult);
 
@@ -172,7 +201,7 @@ public class AdminController {
     }
 
     @GetMapping("/add/cafe")
-    public String addCafe(@ModelAttribute("cafe") Cafe cafe, Model model){
+    public String addCafe(@ModelAttribute("cafe") Cafe cafe, Model model) {
         Person user = userUtil.getActiveUser();
         model.addAttribute("user", user);
         if (!user.getRole().toLowerCase().contains("admin")) {
@@ -182,17 +211,17 @@ public class AdminController {
     }
 
     @PostMapping("/add/cafe")
-    public String createCafe(@ModelAttribute("cafe")@Valid Cafe cafe, BindingResult bindingResult, Model model){
+    public String createCafe(@ModelAttribute("cafe") @Valid Cafe cafe, BindingResult bindingResult, Model model) {
         model.addAttribute("user", userUtil.getActiveUser());
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "admin/addCafe";
         }
 
         Cafe newCafe = cafeService.create(cafe);
         System.out.println(newCafe);
         if (newCafe != null) {
-            return "redirect:/cafe/"+newCafe.getId();
+            return "redirect:/cafe/" + newCafe.getId();
         }
 
         return "redirect:/admin";
