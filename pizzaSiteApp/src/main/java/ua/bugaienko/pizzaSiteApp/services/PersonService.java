@@ -1,6 +1,7 @@
 package ua.bugaienko.pizzaSiteApp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,19 +42,29 @@ public class PersonService {
     }
 
     @Transactional
-    public void register(Person person) {
+    public Person register(Person person) {
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         person.setRole("ROLE_USER");
-        personRepository.save(person);
+        return personRepository.save(person);
     }
 
     @Transactional
-    public void addPizzaToFav(Person person, Pizza pizza){
-//        List<Pizza> favorites = person.getFavorites();
+    public void addPizzaToFav(Person person, Pizza pizza) {
+//        List<Pizza> favorites2 = person.getFavorites();
         List<Pizza> favorites = pizzaRepository.findByPersons(person);
 
-        favorites.add(pizza);
-        person.setFavorites(Person.deleteDublicates(favorites));
+        if (!favorites.contains(pizza)) {
+            favorites.add(pizza);
+        }
+            person.setFavorites(favorites);
+            personRepository.save(person);
+    }
+
+    @Transactional
+    public void removePizzaFromFav(Person person, Pizza pizza) {
+        List<Pizza> favorites = pizzaRepository.findByPersons(person);
+        favorites.remove(pizza);
+        person.setFavorites(favorites);
         personRepository.save(person);
     }
 }

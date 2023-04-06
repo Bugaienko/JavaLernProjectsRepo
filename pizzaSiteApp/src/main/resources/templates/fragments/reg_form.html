@@ -1,4 +1,4 @@
-<form th:method="POST" th:action="@{/auth/registration}" th:object="${person}" xmlns="http://www.w3.org/1999/html">
+<form th:method="POST" th:action="@{/auth/registration}"  th:object="${person}" xmlns="http://www.w3.org/1999/html">
     <div class="mb-3">
         <label class="form-label" for="username">Enter username: </label>
         <input class="form-control" type="text" th:field="*{username}" id="username" placeholder="Username"/>
@@ -21,6 +21,14 @@
         <input class="form-control" type="password" th:field="*{password}" id="password"/>
         <div class="form-text" style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
             Password Error
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="avatar">Avatar: </label>
+        <input class="form-control" type="file" th:field="*{avatar}" id="avatar" />
+        <div class="form-text" style="color:red" th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}">Year of
+            birth Error
         </div>
     </div>
 

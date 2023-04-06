@@ -133,8 +133,8 @@ public class Person {
                 '}';
     }
 
-    public static List<Pizza> deleteDublicates(List<Pizza> pizzas) {
-        Set<Pizza> set = new LinkedHashSet<>(pizzas);
-        return new ArrayList<>(set);
-    }
+//    public static List<Pizza> deleteDublicates(List<Pizza> pizzas) {
+//        Set<Pizza> set = new LinkedHashSet<>(pizzas);
+//        return new ArrayList<>(set);
+//    }
 }

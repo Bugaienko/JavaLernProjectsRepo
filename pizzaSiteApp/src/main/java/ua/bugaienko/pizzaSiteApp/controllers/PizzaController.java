@@ -39,13 +39,21 @@ public class PizzaController {
     }
 
     @GetMapping("/addToFav/{Id}")
-    public String addPizzaToPersonFav(@PathVariable("Id") int pizzaId){
+    public String addPizzaToPersonFav(@PathVariable("Id") int pizzaId, Model model){
         Person person = userUtil.getActiveUser();
         if (person == null) {
             return "auth/needLogin";
         }
+        model.addAttribute("user", person);
         personService.addPizzaToFav(person, pizzaService.findById(pizzaId));
         return "redirect:/menu";
+    }
+    @GetMapping("/removeFromFav/{id}")
+    public String removeFromPersonFav(@PathVariable("id") int pizzaId){
+        Person person = userUtil.getActiveUser();
+        personService.removePizzaFromFav(person, pizzaService.findById(pizzaId));
+        return "redirect:/user/myPage";
+
     }
 
     @GetMapping("/{id}")
