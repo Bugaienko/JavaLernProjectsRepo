@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - property:
+      name: type:text
+      value: text
+  - include:
+      file: db/changelog/sets/DEV-1.yaml
+  - include:
+      file: db/changelog/sets/DEV-2.yaml
+  - include:
+      file: db/changelog/sets/DEV-3.yaml
+  - include:
+      file: db/changelog/sets/DEV-4.yaml
+  - include:
+      file: db/changelog/sets/DEV-5.yaml
