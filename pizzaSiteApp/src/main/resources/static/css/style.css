@@ -12595,3 +12595,8 @@ p.balu-yellow{
     padding: 10px;
 
 }
+.balu-grid {
+    display: grid !important;
+    align-content: space-between !important;
+    justify-content: center;
+}

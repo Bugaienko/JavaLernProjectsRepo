@@ -7,6 +7,8 @@ import ua.bugaienko.pizzaSiteApp.models.Ingredient;
 import ua.bugaienko.pizzaSiteApp.models.Person;
 import ua.bugaienko.pizzaSiteApp.services.IngredientService;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,6 +40,20 @@ public class IngredientValidator implements Validator {
         if (resultByName.isPresent()) {
             errors.rejectValue("name", "", "This title is already in use. Choose another");
         }
+    }
 
+    public void validate(Object target, int ingrId, Errors errors) {
+        Ingredient targetIngr = (Ingredient) target;
+
+        Optional<Ingredient> resultByName = ingredientService.findIngredientByName(targetIngr.getName());
+
+        if (resultByName.isPresent()) {
+            List<Ingredient> ingredients = Collections.singletonList(resultByName.get());
+            for (Ingredient ing : ingredients) {
+                if (ing.getId() != ingrId) {
+                    errors.rejectValue("name", "", "This title is already in use. Choose another");
+                }
+            }
+        }
     }
 }

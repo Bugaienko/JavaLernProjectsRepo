@@ -59,8 +59,8 @@ public class PersonService {
             favorites.add(pizza);
         }
         person.setFavorites(favorites);
-        logger.info("Add Fav pizza{} to Person, personId={}",pizza.getId(), person.getId());
         personRepository.save(person);
+        logger.info("Add Fav pizza{} to Person, personId={}",pizza.getId(), person.getId());
     }
 
     @Transactional
@@ -68,8 +68,8 @@ public class PersonService {
         List<Pizza> favorites = pizzaRepository.findByPersons(person);
         favorites.remove(pizza);
         person.setFavorites(favorites);
-        logger.info("Del pizza{} from Person id={} Fav", pizza.getId(), person.getId());
 
         personRepository.save(person);
+        logger.info("Del pizza{} from Person id={} Fav", pizza.getId(), person.getId());
     }
 }

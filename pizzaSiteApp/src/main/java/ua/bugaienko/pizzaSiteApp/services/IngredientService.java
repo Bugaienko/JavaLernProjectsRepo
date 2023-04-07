@@ -1,5 +1,7 @@
 package ua.bugaienko.pizzaSiteApp.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class IngredientService {
 
+    private final Logger logger = LoggerFactory.getLogger(IngredientService.class);
     private final IngredientRepository ingredientRepository;
     private final TypesRepository typesRepository;
 
@@ -30,15 +33,15 @@ public class IngredientService {
         this.typesRepository = typesRepository;
     }
 
-    public List<Ingredient> findAll(){
+    public List<Ingredient> findAll() {
         return ingredientRepository.findAll();
     }
 
-    public List<Ingredient> findByPizza(Pizza pizza){
+    public List<Ingredient> findByPizza(Pizza pizza) {
         return ingredientRepository.findByPizzas(pizza, Sort.by("type"));
     }
 
-    public List<Ingredient> findAllSort(){
+    public List<Ingredient> findAllSort() {
         return ingredientRepository.findAll(Sort.by("type"));
     }
 
@@ -49,14 +52,29 @@ public class IngredientService {
 
     @Transactional
     public void create(Ingredient ingredient, TypeIngredient typeIngredient) {
-       TypeIngredient type = typesRepository.getById(ingredient.getId());
-        System.out.println(type);
+        TypeIngredient type = typesRepository.getById(ingredient.getId());
+
         Ingredient newIngredient = new Ingredient();
         newIngredient.setName(ingredient.getName());
         newIngredient.setPrice(ingredient.getPrice());
         newIngredient.setImage(ingredient.getImage());
         newIngredient.setType(type);
-        System.out.println(newIngredient);
+
         ingredientRepository.save(newIngredient);
+        logger.info("Create new ingredient {}", ingredient.getName());
+    }
+
+    public Ingredient findById(int ingrId) {
+        Optional<Ingredient> ingredient =  ingredientRepository.findById(ingrId);
+        if (ingredient.isPresent()) {
+            return ingredient.get();
+        }
+        else return null;
+    }
+
+    @Transactional
+    public Ingredient update(Ingredient ingredient) {
+        logger.info("Update ingredient id={}", ingredient.getId());
+        return ingredientRepository.save(ingredient);
     }
 }

@@ -20,6 +20,7 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
+
     private final UserUtil userUtil;
     private final TypeService typeService;
     private final IngredientService ingredientService;
@@ -128,6 +129,35 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @GetMapping("edit/type")
+    public String choiceTypeForEdit(@ModelAttribute("type") TypeIngredient type, Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        List<TypeIngredient> types = typeService.findAllSorted();
+        model.addAttribute("types", types);
+        return "admin/choiceType";
+    }
+
+    @PostMapping("edit/type")
+    public String editType(@ModelAttribute("type") TypeIngredient type, Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        TypeIngredient type1 = typeService.findById(type.getId());
+        model.addAttribute("type", type1);
+        return "admin/editType";
+    }
+
+    @PatchMapping("edit/type/{id}")
+    public String updateType(@ModelAttribute("type") @Valid TypeIngredient type, BindingResult bindingResult, Model model,
+                             @PathVariable("id") int typeId) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        typeValidator.validate(type, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return "admin/editType";
+        }
+        typeService.update(type);
+        return "redirect:/admin";
+
+    }
+
     @GetMapping("base/edit")
     public String choiceBase(@ModelAttribute("base") Base base, Model model) {
         model.addAttribute("user", userUtil.getActiveUser());
@@ -197,6 +227,79 @@ public class AdminController {
         if (newPizza != null) {
             return "redirect:/pizza/" + newPizza.getId();
         }
+        return "redirect:/admin";
+    }
+
+    @GetMapping("edit/pizza")
+    public String selectPizzaForEdit(Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        model.addAttribute("pizzas", pizzaService.findAllSortedBy("name"));
+        return "admin/choicePizza";
+    }
+
+    @GetMapping("/edit/pizza/{id}")
+    public String editPizza(@PathVariable("id") int pizzaId, Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        Pizza pizza = pizzaService.findById(pizzaId);
+        List<Ingredient> ingredients = ingredientService.findAllSort();
+        List<Base> bases = baseService.findAllSorted();
+        model.addAttribute("pizza", pizza);
+        model.addAttribute("ingredients", ingredients);
+        model.addAttribute("bases", bases);
+        model.addAttribute("ingCount", ingredients.size());
+
+        return "admin/editPizza";
+    }
+
+    @PatchMapping("/edit/pizza/{id}")
+    public String updatePizza(@ModelAttribute("pizza") @Valid Pizza pizza, BindingResult bindingResult, Model model,
+                              @PathVariable("id") int pizzaId) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        pizzaValidator.validate(pizza, pizzaId, bindingResult);
+        if (bindingResult.hasErrors()) {
+            List<Ingredient> ingredients = ingredientService.findAllSort();
+            List<Base> bases = baseService.findAllSorted();
+            model.addAttribute("ingredients", ingredients);
+            model.addAttribute("bases", bases);
+            return "admin/editPizza";
+        }
+
+        pizzaService.update(pizzaId, pizza);
+
+        return "redirect:/admin";
+    }
+
+    @GetMapping("edit/ingredient")
+    public String choiceIngredient(Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        List<Ingredient> ingredients = ingredientService.findAllSort();
+        model.addAttribute("ingredients", ingredients);
+        return "admin/choiceIngr";
+    }
+
+    @GetMapping("edit/ingredient/{id}")
+    public String editIngredient(@PathVariable("id") int ingrId, Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        Ingredient ingredient = ingredientService.findById(ingrId);
+        List<TypeIngredient> types = typeService.findAllSorted();
+        model.addAttribute("ingredient", ingredient);
+        model.addAttribute("types", types);
+        return "admin/editIngr";
+    }
+
+    @PatchMapping("edit/ingredient/{id}")
+    public String updateIngredient(@ModelAttribute("ingredient") @Valid Ingredient ingredient, BindingResult bindingResult, Model model,
+                                   @PathVariable("id") int ingrId) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        ingredientValidator.validate(ingredient, ingrId, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            List<TypeIngredient> types = typeService.findAllSorted();
+            model.addAttribute("types", types);
+            return "admin/editIngr";
+        }
+        ingredientService.update(ingredient);
+
         return "redirect:/admin";
     }
 

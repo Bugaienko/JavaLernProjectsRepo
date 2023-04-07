@@ -1,5 +1,7 @@
 package ua.bugaienko.pizzaSiteApp.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ import java.util.Optional;
 public class PizzaService {
 
     private final PizzaRepository pizzaRepository;
+    private final Logger logger = LoggerFactory.getLogger(PizzaService.class);
+
 
     @Autowired
     public PizzaService(PizzaRepository pizzaRepository) {
@@ -69,10 +73,12 @@ public class PizzaService {
     public void setNewPrice(Pizza pizza, double newPrice) {
         pizza.setPrice(newPrice);
         pizzaRepository.save(pizza);
+        logger.info("Set new price {} for Pizza id={}", newPrice, pizza.getId());
     }
 
     @Transactional
     public Pizza create(Pizza pizza) {
+        logger.info("Create new pizza {}", pizza.getName());
         return pizzaRepository.save(pizza);
     }
 
@@ -82,5 +88,28 @@ public class PizzaService {
 
     public List<Pizza> findByPerson(Person person) {
         return pizzaRepository.findByPersons(person);
+    }
+
+    public List<Pizza> findAllSortedBy(String param) {
+        return pizzaRepository.findAll(Sort.by(param));
+    }
+
+    @Transactional
+    public Pizza update(int pizzaId, Pizza pizzaData) {
+//        Pizza pizza = pizzaRepository.findById(pizzaId).get();
+        System.out.println("Serv " + pizzaData);
+        System.out.println("Serv " + pizzaData.getIngredients());
+        System.out.println("Serv " + pizzaData.getId());
+        System.out.println("Serv " + pizzaData.getPersons());
+
+        //TODO save to BD
+//        pizza.setBase(pizzaData.getBase());
+//        pizza.setName(pizzaData.getName());
+//        pizza.setPrice(pizzaData.getPrice());
+//        pizza.setIngredients(pizzaData.getIngredients());
+//        pizza.setImage(pizzaData.getImage());
+
+        logger.info("Update pizza {}/{}", pizzaData.getId(), pizzaData.getName());
+        return pizzaRepository.save(pizzaData);
     }
 }
