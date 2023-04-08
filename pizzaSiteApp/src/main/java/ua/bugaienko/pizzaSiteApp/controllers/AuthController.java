@@ -51,11 +51,7 @@ public class AuthController {
 
     @PostMapping("/registration")
     public String createPerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
-                               @RequestParam("file") MultipartFile avatar) {
-        System.out.println(person);
-
-
-
+                               @RequestParam("file") MultipartFile avatar, String rePassword) {
         if (avatar != null) {
 
 
@@ -67,6 +63,7 @@ public class AuthController {
             person.setAvatar(fileName);
 
             personValidator.validate(person, bindingResult);
+            personValidator.validate(person, rePassword, bindingResult);
 
             if (bindingResult.hasErrors()) {
                 return "auth/registration";

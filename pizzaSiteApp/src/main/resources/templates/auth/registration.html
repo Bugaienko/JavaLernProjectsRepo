@@ -37,6 +37,13 @@
                                 Password Error
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="rePassword">Re-enter password: </label>
+                            <input class="form-control" type="password" name="rePassword"  id="rePassword" required="true"/>
+                            <div class="form-text" style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                                Password Error
+                            </div>
+                        </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="avatar">Avatar: </label>

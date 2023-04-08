@@ -44,4 +44,11 @@ public class PersonValidator implements Validator {
         }
 
     }
+
+    public void validate(Object target, String rePassword, Errors errors) {
+        Person targetPerson = (Person) target;
+        if (!targetPerson.getPassword().equals(rePassword)){
+            errors.rejectValue("password", "", "Passwords don't match");
+        }
+    }
 }
