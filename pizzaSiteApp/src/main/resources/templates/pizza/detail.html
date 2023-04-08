@@ -13,9 +13,9 @@
         </div>
 
         <div th:style="'background-image: url(/images/bg_4.jpg)'">
-            <div class="services-wrap d-flex align-content-center">
+            <div class="services-wrap d-flex align-content-center py-3">
 
-                <div class="col-md-5 justify-content-center">
+                <div class="col-md-3 justify-content-center">
                     <img class="pizza-img  p-3" th:src="@{/images/pizza/{img}(img=${pizza.image})}"/>
                     <div class="mb-3 text-center">
                         <span class="white"
@@ -23,7 +23,7 @@
                         <a th:href="@{/menu}" class="ml-2 btn btn-white btn-outline-white">Menu</a>
                     </div>
                 </div>
-                <div class="col=md-7  ml-3 p-3">
+                <div class="col=md-4  ml-3 p-3">
 
                     <h3 th:text="${pizza.name}"></h3>
 
@@ -40,6 +40,34 @@
                         <span th:text="${' ' + ingr.name}"></span>
                     </div>
 
+                </div>
+                <div class="col=md-4  ml-3 p-3">
+                    <div class="row align-content-center justify-content-center px-1">
+                        <div th:each="ing: ${ingredients}" class="col-md-4 d-flex flex-wrap justify-content-between mb-sm-4 ftco-animate">
+                        <div class="staff balu-grid px-2 py-3">
+                            <div class="img mb-4"
+                                 th:style="${'background-image: url(/images/ingr/'+ing.image}+')'">
+                            </div>
+                            <div class="info text-center">
+                                <h3 th:text="${ing.name}">
+
+                                </h3>
+                                <span th:text="${ing.type.name}"
+                                      class="position"></span>
+                                <div class="text">
+
+                                </div>
+                            </div>
+<!--                            <div class="d-block flex-grow-1 text-center">-->
+<!--                                <a th:href="@{/admin/edit/pizza/{id}(id=${pizza.id})}"-->
+<!--                                   th:text="SELECT"-->
+<!--                                   class="btn btn-primary d-block flex-grow-1">-->
+
+<!--                                </a>-->
+<!--                            </div>-->
+                        </div>
+                    </div>
+                    </div>
                 </div>
 
             </div>
