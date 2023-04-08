@@ -1,5 +1,6 @@
 package ua.bugaienko.pizzaSiteApp.controllers;
 
+import liquibase.pro.packaged.V;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -328,6 +329,37 @@ public class AdminController {
         }
 
         return "redirect:/admin";
+    }
+
+    @GetMapping("/edit/cafe")
+    public String selectCafeForEdit(Model model){
+        model.addAttribute("user", userUtil.getActiveUser());
+        model.addAttribute("cafes", cafeService.findAllSorted());
+        return "admin/choiceCafe";
+    }
+
+    @GetMapping("/edit/cafe/{id}")
+    public String editCafePage(@PathVariable("id") int cafeId, Model model,
+                               @ModelAttribute("cafe") Cafe cafe){
+        model.addAttribute("user", userUtil.getActiveUser());
+        model.addAttribute("cafe", cafeService.findById(cafeId));
+        return "admin/editCafe";
+    }
+
+    @PatchMapping("/edit/cafe/{id}")
+    public String updateCafe(@ModelAttribute("cafe") @Valid Cafe cafe, BindingResult bindingResult, Model model,
+                             @PathVariable("id") int cafeId){
+        model.addAttribute("user", userUtil.getActiveUser());
+        if (bindingResult.hasErrors()){
+            return "admin/editCafe";
+        }
+        System.out.println("Contr admin -> " + cafe);
+//        System.out.println("Contr admin -> " + cafe.getSortedPizza());
+
+        cafeService.update(cafe);
+
+        return "redirect:/admin";
+
     }
 
 }

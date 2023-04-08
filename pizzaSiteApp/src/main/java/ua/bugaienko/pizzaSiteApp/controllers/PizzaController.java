@@ -1,14 +1,11 @@
 package ua.bugaienko.pizzaSiteApp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.bugaienko.pizzaSiteApp.models.Ingredient;
-import ua.bugaienko.pizzaSiteApp.models.Person;
-import ua.bugaienko.pizzaSiteApp.models.Pizza;
-import ua.bugaienko.pizzaSiteApp.models.Price;
+import ua.bugaienko.pizzaSiteApp.models.*;
+import ua.bugaienko.pizzaSiteApp.services.CafeService;
 import ua.bugaienko.pizzaSiteApp.services.IngredientService;
 import ua.bugaienko.pizzaSiteApp.services.PersonService;
 import ua.bugaienko.pizzaSiteApp.services.PizzaService;
@@ -27,19 +24,56 @@ public class PizzaController {
 
     private final PizzaService pizzaService;
     private final PersonService personService;
+    private final CafeService cafeService;
     private final UserUtil userUtil;
     private final IngredientService ingredientService;
 
     @Autowired
-    public PizzaController(PizzaService pizzaService, PersonService personService, UserUtil userUtil, IngredientService ingredientService) {
+    public PizzaController(PizzaService pizzaService, PersonService personService, CafeService cafeService, UserUtil userUtil, IngredientService ingredientService) {
         this.pizzaService = pizzaService;
         this.personService = personService;
+        this.cafeService = cafeService;
         this.userUtil = userUtil;
         this.ingredientService = ingredientService;
     }
 
+    @GetMapping("/add_to_cafe/{id}")
+    public String addPizzaToCafeMenu(@PathVariable("id") int cafeId, Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+        Cafe cafe = cafeService.findById(cafeId);
+        model.addAttribute("cafe", cafe);
+        model.addAttribute("pizzas", pizzaService.findAllSortedBy("name"));
+        return "pizza/addToCafe";
+    }
+
+    @GetMapping("/add_to_menu/{cafe}/{pizza}")
+    public String updateMenu(@PathVariable("cafe") int cafeId, @PathVariable("pizza") int pizzaId,
+                             Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+
+        cafeService.addPizzaToCafe(cafeId, pizzaId);
+
+        Cafe cafe = cafeService.findById(cafeId);
+        model.addAttribute("cafe", cafe);
+        model.addAttribute("pizzas", pizzaService.findAllSortedBy("name"));
+        return "redirect:/pizza/add_to_cafe/" + cafeId;
+    }
+
+    @GetMapping("/del_from_menu/{cafe}/{pizza}")
+    public String deletePizzaFromMenu(@PathVariable("cafe") int cafeId, @PathVariable("pizza") int pizzaId,
+                             Model model) {
+        model.addAttribute("user", userUtil.getActiveUser());
+
+        cafeService.delPizzaFromCafe(cafeId, pizzaId);
+
+        Cafe cafe = cafeService.findById(cafeId);
+        model.addAttribute("cafe", cafe);
+        model.addAttribute("pizzas", pizzaService.findAllSortedBy("name"));
+        return "redirect:/pizza/add_to_cafe/" + cafeId;
+    }
+
     @GetMapping("/addToFav/{Id}")
-    public String addPizzaToPersonFav(@PathVariable("Id") int pizzaId, Model model){
+    public String addPizzaToPersonFav(@PathVariable("Id") int pizzaId, Model model) {
         Person person = userUtil.getActiveUser();
         if (person == null) {
             return "auth/needLogin";
@@ -48,8 +82,9 @@ public class PizzaController {
         personService.addPizzaToFav(person, pizzaService.findById(pizzaId));
         return "redirect:/menu";
     }
+
     @GetMapping("/removeFromFav/{id}")
-    public String removeFromPersonFav(@PathVariable("id") int pizzaId){
+    public String removeFromPersonFav(@PathVariable("id") int pizzaId) {
         Person person = userUtil.getActiveUser();
         personService.removePizzaFromFav(person, pizzaService.findById(pizzaId));
         return "redirect:/user/myPage";
@@ -57,10 +92,10 @@ public class PizzaController {
     }
 
     @GetMapping("/{id}")
-    public String pizzaPage(@PathVariable("id") int pizzaId, Model model){
+    public String pizzaPage(@PathVariable("id") int pizzaId, Model model) {
         model.addAttribute("user", userUtil.getActiveUser());
         Pizza pizza = pizzaService.findById(pizzaId);
-        model.addAttribute("pizza",  pizza);
+        model.addAttribute("pizza", pizza);
         List<Ingredient> ing = ingredientService.findByPizza(pizza);
 
 
@@ -69,7 +104,7 @@ public class PizzaController {
     }
 
     @GetMapping("/checkPrice/{id}")
-    public String checkPricePage(@PathVariable("id") int pizzaId, Model model, @ModelAttribute("price") Price price){
+    public String checkPricePage(@PathVariable("id") int pizzaId, Model model, @ModelAttribute("price") Price price) {
         model.addAttribute("user", userUtil.getActiveUser());
 
         Pizza pizza = pizzaService.findById(pizzaId);
@@ -85,7 +120,7 @@ public class PizzaController {
     }
 
     @PostMapping("/setPrice/{id}")
-    public String setNewPrice(@PathVariable("id") int pizzaId, @ModelAttribute("price") @Valid Price price){
+    public String setNewPrice(@PathVariable("id") int pizzaId, @ModelAttribute("price") @Valid Price price) {
         Pizza pizza = pizzaService.findById(pizzaId);
         double newPrice = price.getPrice();
         pizzaService.setNewPrice(pizza, newPrice);

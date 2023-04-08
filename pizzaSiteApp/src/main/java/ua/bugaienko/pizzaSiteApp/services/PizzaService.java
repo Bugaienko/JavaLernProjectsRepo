@@ -97,10 +97,6 @@ public class PizzaService {
     @Transactional
     public Pizza update(int pizzaId, Pizza pizzaData) {
 //        Pizza pizza = pizzaRepository.findById(pizzaId).get();
-        System.out.println("Serv " + pizzaData);
-        System.out.println("Serv " + pizzaData.getIngredients());
-        System.out.println("Serv " + pizzaData.getId());
-        System.out.println("Serv " + pizzaData.getPersons());
 
         //TODO save to BD
 //        pizza.setBase(pizzaData.getBase());

@@ -47,14 +47,18 @@
                                         [[${cafe.city}]]
                                     </h5>
                                 </div>
-                                <!--                                <div>-->
-                                <!--                                    <p>-->
-                                <!--                                        <a th:href="@{/cafe/{id}(id=${cafe.id})}"-->
-                                <!--                                           th:text="'View cafe'"-->
-                                <!--                                           class="btn btn-white btn-sm btn-outline-white mt-2 p-3 px-xl-4 py-xl-3">-->
-                                <!--                                            View</a>-->
-                                <!--                                    </p>-->
-                                <!--                                </div>-->
+                                <div>
+                                    <p>
+                                        <span th:if="${user != null}">
+                                            <a th:if="${#strings.substringAfter(user.role, 'ROLE_') == 'ADMIN'}"
+                                               th:href="@{/pizza/add_to_cafe/{id}(id=${cafe.id})}"
+                                               th:text="'Edit Menu'"
+                                               class="btn btn-white btn-outline-white ml-1 mt-2 p-3 px-xl-4 py-xl-3">
+                                            </a>
+                                        </span>
+
+                                    </p>
+                                </div>
                             </div>
 
                         </div>
@@ -89,11 +93,11 @@
                                             <span th:text="${pizza.getBase().getSize() + ' ' + pizza.getBase().getName()}"></span>
                                         </p>
                                         <!--Ingredients-->
-<!--                                        <p>-->
-<!--                                                <span th:each="ingr,iterStat : ${pizza.getIngredients()}">-->
-<!--                                                    <span th:text="${!iterStat.last ? ingr.name + ', ' : ingr.name}"></span>-->
-<!--                                                </span>-->
-<!--                                        </p>-->
+                                        <!--                                        <p>-->
+                                        <!--                                                <span th:each="ingr,iterStat : ${pizza.getIngredients()}">-->
+                                        <!--                                                    <span th:text="${!iterStat.last ? ingr.name + ', ' : ingr.name}"></span>-->
+                                        <!--                                                </span>-->
+                                        <!--                                        </p>-->
                                     </div>
                                 </div>
                             </div>
