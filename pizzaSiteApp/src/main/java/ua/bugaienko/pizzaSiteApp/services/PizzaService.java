@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.bugaienko.pizzaSiteApp.models.*;
 import ua.bugaienko.pizzaSiteApp.repositiries.PizzaRepository;
+import ua.bugaienko.pizzaSiteApp.util.responses.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class PizzaService {
     }
 
     public Pizza findById(int id) {
-        return pizzaRepository.findById(id).get();
+        return pizzaRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     public List<Cafe> findCafesByPizzaId(int pizzaId) {

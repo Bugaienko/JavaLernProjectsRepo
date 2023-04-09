@@ -3,7 +3,10 @@ package ua.bugaienko.pizzaSiteApp.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,8 +14,11 @@ import ua.bugaienko.pizzaSiteApp.models.Person;
 import ua.bugaienko.pizzaSiteApp.models.Pizza;
 import ua.bugaienko.pizzaSiteApp.repositiries.PersonRepository;
 import ua.bugaienko.pizzaSiteApp.repositiries.PizzaRepository;
+import ua.bugaienko.pizzaSiteApp.util.PersonNotFoundException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -21,11 +27,12 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class PersonService {
+public class PersonService implements UserDetailsService {
     static final Logger logger = LoggerFactory.getLogger(PersonService.class);
     private final PersonRepository personRepository;
     private final PizzaRepository pizzaRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public PersonService(PersonRepository personRepository, PizzaRepository pizzaRepository, PasswordEncoder passwordEncoder) {
@@ -71,5 +78,30 @@ public class PersonService {
 
         personRepository.save(person);
         logger.info("Del pizza{} from Person id={} Fav", pizza.getId(), person.getId());
+    }
+
+    public Person getById(int personId) {
+        return personRepository.findById(personId).orElseThrow(PersonNotFoundException::new);
+    }
+
+    public List<Person> getAll() {
+        return personRepository.findAll();
+    }
+
+    public Person getByName(String username){
+        List<Person> persons = personRepository.findAll();
+        return persons.stream()
+                .filter(user -> username.equals(user.getUsername()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Person u = getByName(username);
+        if (Objects.isNull(u)){
+            throw new UsernameNotFoundException(String.format("User %s is not found", username));
+        }
+        return new User(u.getUsername(), u.getPassword(), true,true,true,true, new HashSet<>());
     }
 }
