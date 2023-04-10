@@ -61,10 +61,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
+                .antMatchers("/auth/registration", "/auth/login", "/error", "/", "/menu",
+                        "/about", "/contact", "/cafe/pizza/*", "/pizza/addToFav/*", "/cafe", "/cafe/**").permitAll()
+                .antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/scss/**", "/favicon.ico").permitAll()
+
+                .antMatchers("/pizza/checkPrice/*", "pizza/setPrice/*").hasAnyRole("ADMIN")
+                .antMatchers("/user/*").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/**").authenticated()
+//                .anyRequest().hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -80,5 +89,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //		.sessionManagement()
 //		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
+
+
+
+
 
 }

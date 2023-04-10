@@ -3,11 +3,15 @@ package ua.bugaienko.pizzaSiteApp.config.jwt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ua.bugaienko.pizzaSiteApp.models.Person;
+import ua.bugaienko.pizzaSiteApp.security.PersonDetails;
 import ua.bugaienko.pizzaSiteApp.services.UserDetailService;
 
 import org.springframework.util.StringUtils;
@@ -38,7 +42,27 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //TODO filter
+        String path = request.getServletPath();
+        System.out.println("path " + path);
+        if (path.startsWith("/api/")) {
+            System.out.println("Запрос к api");
+        } else {
+            System.out.println("filter go home");
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (!(authentication instanceof AnonymousAuthenticationToken)) {
+                System.out.println("Dot 1");
+//                PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+//                UserDetails user = (UserDetails) personDetails.getPerson();
+//                if (user != null) {
+//                    System.out.println(user.getAuthorities());
+//                }
+
+            }
+            filterChain.doFilter(request, response);
+            return;
+        }
         try {
+            System.out.println("filter work");
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
@@ -49,7 +73,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
 //            System.err.println(e);
         }
