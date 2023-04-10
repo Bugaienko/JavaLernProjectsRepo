@@ -28,3 +28,9 @@ databaseChangeLog:
       file: db/changelog/sets/DEV-12.yaml
   - include:
       file: db/changelog/sets/DEV-13.yaml
+  - include:
+      file: db/changelog/sets/DEV-14.yaml
+  - include:
+      file: db/changelog/sets/DEV-15.yaml
+  - include:
+      file: db/changelog/sets/DEV-16.yaml

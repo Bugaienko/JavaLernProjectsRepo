@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user-role-table
+      author: Bugaienko
+      changes:
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+              - column:
+                  name: role_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            constraintName: fk_user_roles
+            baseTableName: user_roles
+            baseColumnNames: user_id
+            referencedTableName: t_users
+            referencedColumnNames: id
+            onDelete: SET NULL
+        - addForeignKeyConstraint:
+            constraintName: fk_roles_user
+            baseTableName: user_roles
+            baseColumnNames: role_id
+            referencedTableName: t_roles
+            referencedColumnNames: id
+            onDelete: SET NULL
