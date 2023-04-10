@@ -18,8 +18,7 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class PersonDetailService
-        // implements UserDetailsService
+public class PersonDetailService implements UserDetailsService
 {
 
     private final PersonDetailRepository personDetailRepository;
@@ -29,7 +28,7 @@ public class PersonDetailService
         this.personDetailRepository = personDetailRepository;
     }
 
-    //@Override
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Person> person = personDetailRepository.findByUsername(username);
 

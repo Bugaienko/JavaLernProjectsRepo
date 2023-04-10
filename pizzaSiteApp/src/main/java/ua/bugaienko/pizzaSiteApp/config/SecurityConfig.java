@@ -23,7 +23,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import ua.bugaienko.pizzaSiteApp.security.JwtCsrfFilter;
 import ua.bugaienko.pizzaSiteApp.security.JwtTokenRepository;
 
-import ua.bugaienko.pizzaSiteApp.services.PersonService;
+import ua.bugaienko.pizzaSiteApp.services.PersonDetailService;
 
 
 /**
@@ -32,26 +32,26 @@ import ua.bugaienko.pizzaSiteApp.services.PersonService;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Configuration
+//@Configuration
 //@OpenAPIDefinition(info = @Info(title = "Pizza site api", version = "1.0", description = "Pizzas @ Cafes Details"))
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String SCHEME_NAME = "basicAuth";
     private static final String SCHEME = "basic";
 
 
-    private final PersonService personService;
     private  final JwtTokenRepository jwtTokenRepository;
+    private final PersonDetailService personDetailService;
 
+    @Autowired
     @Qualifier("handlerExceptionResolver")
-    private final HandlerExceptionResolver resolver;
+    private HandlerExceptionResolver resolver;
 
 
 
     @Autowired
-    public SecurityConfig(PersonService personService, JwtTokenRepository jwtTokenRepository, HandlerExceptionResolver resolver) {
-        this.personService = personService;
+    public SecurityConfig(JwtTokenRepository jwtTokenRepository, PersonDetailService personDetailService) {
         this.jwtTokenRepository = jwtTokenRepository;
-        this.resolver = resolver;
+        this.personDetailService = personDetailService;
     }
 
     @Override
@@ -59,9 +59,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/auth/registration", "/auth/login", "/error", "/", "/menu",
                         "/about", "/contact", "/cafe/pizza/*", "/pizza/addToFav/*", "/cafe", "/cafe/**", "/swagger-ui/**").permitAll()
+//                .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/scss/**", "/favicon.ico").permitAll()
                 .antMatchers("/pizza/checkPrice/*", "pizza/setPrice/*").hasAnyRole("ADMIN")
                 .antMatchers("/user/*").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/**").authenticated()
                 .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
                 .formLogin()
@@ -80,11 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.NEVER)
                 .and()
                 .addFilterAt(new JwtCsrfFilter(jwtTokenRepository, resolver), CsrfFilter.class)
-                .csrf().ignoringAntMatchers("/api/**")
-                .and()
-                .authorizeRequests()
-                .antMatchers("/api/auth/login")
-                .authenticated()
+                .csrf().ignoringAntMatchers("/**")
                 .and()
                 .httpBasic()
                 .authenticationEntryPoint((request, response, e) -> resolver.resolveException(request, response, null, e));
@@ -95,8 +93,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        AAAauth.userDetailsService(personDetailService).passwordEncoder(getPasswordEncoder()); //OLD worked
-        auth.userDetailsService(personService).passwordEncoder(getPasswordEncoder());
+        auth.userDetailsService(personDetailService).passwordEncoder(getPasswordEncoder()); //OLD worked
+//        auth.userDetailsService(personService).passwordEncoder(getPasswordEncoder());
     }
 
 //    @Bean
