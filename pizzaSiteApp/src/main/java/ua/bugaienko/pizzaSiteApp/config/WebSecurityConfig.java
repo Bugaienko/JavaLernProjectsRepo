@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ua.bugaienko.pizzaSiteApp.config.jwt.AuthTokenFilter;
 import ua.bugaienko.pizzaSiteApp.config.jwt.AuthEntryPointJwt;
+import ua.bugaienko.pizzaSiteApp.security.PersonDetailServiceApi;
 import ua.bugaienko.pizzaSiteApp.services.UserDetailService;
 
 /**
@@ -25,11 +26,12 @@ import ua.bugaienko.pizzaSiteApp.services.UserDetailService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailService userDetailService;
+//    private final UserDetailService userDetailService;
+    private final PersonDetailServiceApi personDetailServiceApi;
     private final AuthEntryPointJwt unauthorizedHandler;
 
-    public WebSecurityConfig(UserDetailService userDetailService, AuthEntryPointJwt unauthorizedHandler) {
-        this.userDetailService = userDetailService;
+    public WebSecurityConfig(PersonDetailServiceApi personDetailServiceApi, AuthEntryPointJwt unauthorizedHandler) {
+        this.personDetailServiceApi = personDetailServiceApi;
         this.unauthorizedHandler = unauthorizedHandler;
     }
 
@@ -42,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
+        authenticationManagerBuilder.userDetailsService(personDetailServiceApi).passwordEncoder(passwordEncoder());
     }
 
     @Bean
@@ -59,10 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+        http.cors().and()
+
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
@@ -73,8 +73,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/pizza/checkPrice/*", "pizza/setPrice/*").hasAnyRole("ADMIN")
                 .antMatchers("/user/*").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/**").authenticated()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/auth/login")
+                .loginProcessingUrl("/process_login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/auth/login?error")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/auth/login")
+                .permitAll()
+                .and().exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and();
 //                .anyRequest().hasAnyRole("USER", "ADMIN")
-                .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
