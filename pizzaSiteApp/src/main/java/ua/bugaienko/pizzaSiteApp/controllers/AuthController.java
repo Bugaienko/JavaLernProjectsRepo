@@ -55,7 +55,6 @@ public class AuthController {
         if (avatar != null) {
 
 
-
             String uuidFile = UUID.randomUUID().toString();
 //            String resultFileName = uuidFile + "-" + avatar.getOriginalFilename();
             String fileName = avatar.getOriginalFilename();
@@ -74,12 +73,22 @@ public class AuthController {
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
-            System.out.println(uploadDir);
+//            System.out.println(uploadDir);
             try {
                 avatar.transferTo(new File(uploadDir + "/" + fileName));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            personValidator.validate(person, bindingResult);
+            personValidator.validate(person, rePassword, bindingResult);
+
+            if (bindingResult.hasErrors()) {
+                return "auth/registration";
+            }
+
+            Person person1 = personService.register(person);
+
         }
 
 

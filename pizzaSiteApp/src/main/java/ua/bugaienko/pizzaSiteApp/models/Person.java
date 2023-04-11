@@ -1,13 +1,17 @@
 package ua.bugaienko.pizzaSiteApp.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.springframework.data.repository.cdi.Eager;
+import ua.bugaienko.pizzaSiteApp.controllers.dto.PersonDTO;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -31,12 +35,13 @@ public class Person {
     private String username;
     @Column(name = "password")
     @NotEmpty(message = "Password should be not empty")
+    @Size(min = 3, message = "Password must be at least 3 characters long")
     private String password;
     @Column(name = "email")
+    @Email
     @NotEmpty(message = "Email should be not empty")
     private String email;
     @Column(name = "role")
-
     private String role;
     @Column(name = "avatar")
     private String avatar;
@@ -57,6 +62,15 @@ public class Person {
         this.password = password;
         this.email = email;
     }
+
+    public Person(String username, String password, String email, String avatar) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.avatar = avatar;
+    }
+
+
 
     public List<Pizza> getSortedPizza(){
         List<Pizza> pizzas = this.favorites;

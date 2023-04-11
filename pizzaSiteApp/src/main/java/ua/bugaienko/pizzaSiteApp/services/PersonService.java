@@ -3,7 +3,6 @@ package ua.bugaienko.pizzaSiteApp.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +10,9 @@ import ua.bugaienko.pizzaSiteApp.models.Person;
 import ua.bugaienko.pizzaSiteApp.models.Pizza;
 import ua.bugaienko.pizzaSiteApp.repositiries.PersonRepository;
 import ua.bugaienko.pizzaSiteApp.repositiries.PizzaRepository;
+import ua.bugaienko.pizzaSiteApp.util.NotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,9 +46,20 @@ public class PersonService {
     @Transactional
     public Person register(Person person) {
         person.setPassword(passwordEncoder.encode(person.getPassword()));
-        person.setRole("ROLE_USER");
-        logger.info("Add new Person, personId={}", person.getId());
+        enrichPerson(person);
+        logger.info("Add new Person, personId={}", person.getUsername());
         return personRepository.save(person);
+    }
+
+    private void enrichPerson(Person person) {
+        person.setRole("ROLE_USER");
+//        person.setCreatedAt(LocalDateTime.now());
+//        person.setUpdatedAt(LocalDateTime.now());
+//        person.setCreatedWho("ADMIN");
+    }
+
+    public List<Person> findAll() {
+        return personRepository.findAll();
     }
 
     @Transactional
@@ -71,5 +83,14 @@ public class PersonService {
 
         personRepository.save(person);
         logger.info("Del pizza{} from Person id={} Fav", pizza.getId(), person.getId());
+    }
+
+    @Transactional
+    public void save(Person person){
+        personRepository.save(person);
+    }
+
+    public Person findOne(int personId) {
+        return personRepository.findById(personId).orElseThrow(NotFoundException::new);
     }
 }

@@ -29,10 +29,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                .csrf().disable()
+                .authorizeRequests()
                 .antMatchers("/auth/registration", "/auth/login", "/error", "/", "/menu",
                         "/about", "/contact", "/cafe/pizza/*", "/pizza/addToFav/*", "/cafe", "/cafe/**").permitAll()
                 .antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/scss/**", "/favicon.ico").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/pizza/checkPrice/*", "pizza/setPrice/*").hasAnyRole("ADMIN")
                 .antMatchers("/user/*").hasAnyRole("USER", "ADMIN")
                 .anyRequest().hasAnyRole("USER", "ADMIN")
