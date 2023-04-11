@@ -6,8 +6,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import ua.bugaienko.pizzaSiteApp.models.Ingredient;
 import ua.bugaienko.pizzaSiteApp.security.PersonDetails;
 import ua.bugaienko.pizzaSiteApp.services.IngredientService;
+
+import java.util.List;
 
 /**
  * @author Sergii Bugaienko
@@ -24,12 +28,16 @@ public class HelloController {
     }
 
     @GetMapping("/test")
-    public String testPage(Model model){
+    @ResponseBody
+    public String testPage(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         System.out.println(personDetails.getPerson());
-        model.addAttribute("ingredients", ingredientService.findAll());
-        return "test";
+        List<Ingredient> ingredients = ingredientService.findAll();
+        return personDetails.getUsername();
+
+
+
     }
 
     @GetMapping("/ddd")

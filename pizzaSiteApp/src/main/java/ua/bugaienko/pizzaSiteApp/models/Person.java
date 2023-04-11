@@ -1,21 +1,12 @@
 package ua.bugaienko.pizzaSiteApp.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Fetch;
-import org.springframework.data.repository.cdi.Eager;
-import ua.bugaienko.pizzaSiteApp.controllers.dto.PersonDTO;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Sergii Bugaienko

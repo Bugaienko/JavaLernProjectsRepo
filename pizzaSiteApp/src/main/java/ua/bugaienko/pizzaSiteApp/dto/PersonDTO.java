@@ -1,4 +1,4 @@
-package ua.bugaienko.pizzaSiteApp.controllers.dto;
+package ua.bugaienko.pizzaSiteApp.dto;
 
 import ua.bugaienko.pizzaSiteApp.models.Person;
 
