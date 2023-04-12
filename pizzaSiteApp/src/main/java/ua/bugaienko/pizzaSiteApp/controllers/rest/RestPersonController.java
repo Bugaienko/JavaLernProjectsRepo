@@ -94,7 +94,7 @@ public class RestPersonController {
         Map<String, String> resp = new HashMap<>();
         resp.put("jwt-token", token);
         return resp;
-        
+
     }
 
     @GetMapping("/all")
