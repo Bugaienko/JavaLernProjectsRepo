@@ -108,4 +108,8 @@ public class PizzaService {
         logger.info("Update pizza {}/{}", pizzaData.getId(), pizzaData.getName());
         return pizzaRepository.save(pizzaData);
     }
+
+    public List<Pizza> findByCafe(Cafe cafe) {
+        return pizzaRepository.findByCafes(cafe, Sort.by("name").ascending());
+    }
 }

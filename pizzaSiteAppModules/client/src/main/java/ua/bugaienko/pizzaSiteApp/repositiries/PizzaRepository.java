@@ -3,6 +3,7 @@ package ua.bugaienko.pizzaSiteApp.repositiries;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ua.bugaienko.pizzaSiteApp.models.Cafe;
 import ua.bugaienko.pizzaSiteApp.models.Person;
 import ua.bugaienko.pizzaSiteApp.models.Pizza;
 
@@ -16,4 +17,6 @@ public interface PizzaRepository extends JpaRepository<Pizza, Integer> {
     List<Pizza> findByPersons(Person person);
 
     Optional<Pizza> findByName(String name);
+
+    List<Pizza> findByCafes(Cafe cafe, Sort name);
 }

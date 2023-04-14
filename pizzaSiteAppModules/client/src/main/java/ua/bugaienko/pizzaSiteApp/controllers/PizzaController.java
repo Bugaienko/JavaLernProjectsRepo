@@ -41,7 +41,9 @@ public class PizzaController {
     public String addPizzaToCafeMenu(@PathVariable("id") int cafeId, Model model) {
         model.addAttribute("user", userUtil.getActiveUser());
         Cafe cafe = cafeService.findById(cafeId);
+//        List<Pizza> cafPizzas = pizzaService.findByCafe(cafe);
         model.addAttribute("cafe", cafe);
+//        model.addAttribute("cafePizzas", cafPizzas);
         model.addAttribute("pizzas", pizzaService.findAllSortedBy("name"));
         return "pizza/addToCafe";
     }

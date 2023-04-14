@@ -13,7 +13,7 @@
 
         <div th:style="'background-image: url(/images/bg_4.jpg)'">
 <!--                List cafes pizzas-->
-            <div class="row d-flex flex-column justify-content-center align-content-center mt-3">
+            <div class="row d-flex flex-column justify-content-center align-content-center pt-3 mt-3">
                 <h3 class="mt-4 text-center" th:text="${cafe.title} + ': now in menu'"></h3>
                 <div class="col-md-10 d-flex flex-wrap align-content-center justify-content-center py-5 px-1">
 
@@ -45,12 +45,12 @@
             </div>
 <!--            List all pizzas-->
             <div class="row d-flex flex-column justify-content-center align-content-center mt-3">
-                <h3 class="text-center" th:text="'All pizzas'"></h3>
+                <h3 class="text-center" th:text="'Available pizzas'"></h3>
                 <div class="col-md-10 d-flex flex-wrap align-content-center justify-content-center py-5 px-1">
 
-
-                    <div th:each="pizza: ${pizzas}" class="col-lg-3 d-flex mb-sm-4 ftco-animate">
-                        <div class="staff balu-grid px-2 py-3">
+                    <th:block th:each="pizza: ${pizzas}" >
+                    <div th:unless="${#lists.contains(cafe.getSortedPizza(), pizza)}" class="col-lg-3 d-flex mb-sm-4 ftco-animate">
+                        <div  class="staff balu-grid px-2 py-3">
                             <div class="img mb-4"
                                  th:style="${'background-image: url(/images/pizza/'+pizza.image}+')'">
                             </div>
@@ -77,6 +77,7 @@
                         </div>
 
                     </div>
+                    </th:block>
                 </div>
 
 
