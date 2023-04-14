@@ -46,21 +46,42 @@ public class AuthController {
 
     @GetMapping("/registration")
     public String registrationPage(@ModelAttribute("person") Person person) {
+
         return "auth/registration";
     }
 
     @PostMapping("/registration")
-    public String createPerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
-                               @RequestParam("file") MultipartFile avatar, String rePassword) {
-        if (avatar != null) {
-
-
-            String uuidFile = UUID.randomUUID().toString();
-//            String resultFileName = uuidFile + "-" + avatar.getOriginalFilename();
-            String fileName = avatar.getOriginalFilename();
-
-            person.setAvatar(fileName);
-
+    public String createPerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult, String rePassword) {
+//    public String createPerson(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult, @RequestParam("file") MultipartFile avatar, String rePassword) {
+//        if (avatar != null) {
+//
+//
+////            String uuidFile = UUID.randomUUID().toString();
+////            String resultFileName = uuidFile + "-" + avatar.getOriginalFilename();
+//            String fileName = avatar.getOriginalFilename();
+//
+//            person.setAvatar(fileName);
+//
+//            personValidator.validate(person, bindingResult);
+//            personValidator.validate(person, rePassword, bindingResult);
+//
+//            if (bindingResult.hasErrors()) {
+//                return "auth/registration";
+//            }
+//
+//            Person person1 = personService.register(person);
+//            File uploadDir = new File(uploadPath + "/images/user/" + person1.getId());
+//            if (!uploadDir.exists()) {
+//                uploadDir.mkdir();
+//            }
+////            System.out.println(uploadDir);
+//            try {
+//                avatar.transferTo(new File(uploadDir + "/" + fileName));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        else {
             personValidator.validate(person, bindingResult);
             personValidator.validate(person, rePassword, bindingResult);
 
@@ -69,31 +90,12 @@ public class AuthController {
             }
 
             Person person1 = personService.register(person);
-            File uploadDir = new File(uploadPath + "/images/user/" + person1.getId());
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-//            System.out.println(uploadDir);
-            try {
-                avatar.transferTo(new File(uploadDir + "/" + fileName));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            personValidator.validate(person, bindingResult);
-            personValidator.validate(person, rePassword, bindingResult);
-
-            if (bindingResult.hasErrors()) {
-                return "auth/registration";
-            }
-
-            Person person1 = personService.register(person);
-
-        }
-
+//        }
 
         return "redirect:/auth/login";
     }
+
+
 
     @GetMapping("/exit")
     public String confirmLogout(Model model) {

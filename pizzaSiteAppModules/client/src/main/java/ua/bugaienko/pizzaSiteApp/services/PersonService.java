@@ -52,6 +52,15 @@ public class PersonService {
         return personRepository.save(person);
     }
 
+    @Transactional
+    public Person update(Person person, Person formPerson) {
+        person.setPassword(passwordEncoder.encode(formPerson.getPassword()));
+        person.setUsername(formPerson.getUsername());
+        person.setEmail(formPerson.getEmail());
+        logger.info("Edit Person, personId={}", person.getUsername());
+        return personRepository.save(person);
+    }
+
     private void enrichPerson(Person person) {
         person.setRole("ROLE_USER");
 //        person.setCreatedAt(LocalDateTime.now());

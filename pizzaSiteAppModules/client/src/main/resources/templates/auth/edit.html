@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header('Regisration')">Header</head>
+<head th:replace="fragments/header :: header('Edit info')">Header</head>
 <body>
 
-<nav th:replace="fragments/navbar :: navbar('signup')"></nav>
+<nav th:replace="fragments/navbar :: navbar('login')"></nav>
 
 <section class="ftco-section" th:style="'background-image: url(/images/bg_5.jpg)'">
     <div class="container">
@@ -12,7 +12,7 @@
                 <h3 class="mb-4 justify-content-center text-center" >Login</h3>
                 <div class="form auth registration">
 <!--                    <div th:replace="fragments/reg_form"/>-->
-                    <form th:method="POST" enctype="multipart/form-data" th:action="@{/auth/registration}"  th:object="${person}" xmlns="http://www.w3.org/1999/html">
+                    <form th:method="PATCH" enctype="multipart/form-data" th:action="@{/user/edit}"  th:object="${person}" xmlns="http://www.w3.org/1999/html">
                         <div class="mb-3">
                             <label class="form-label" for="username">Enter username: </label>
                             <input class="form-control" type="text" th:field="*{username}" id="username" placeholder="Username"/>
@@ -31,29 +31,23 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label" for="password">Enter password: </label>
+                            <label class="form-label" for="password">Enter new password: </label>
                             <input class="form-control" type="password" th:field="*{password}" id="password"/>
                             <div class="form-text" style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
                                 Password Error
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="rePassword">Re-enter password: </label>
+                            <label class="form-label" for="rePassword">Re-enter new password: </label>
                             <input class="form-control" type="password" name="rePassword"  id="rePassword" required="true"/>
                             <div class="form-text" style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
                                 Password Error
                             </div>
                         </div>
 
-<!--                        <div class="mb-3">-->
-<!--                            <label class="form-label" for="avatar">Avatar: </label>-->
-<!--                            <input class="form-control" type="file" name="file" id="avatar" />-->
-<!--                            <div class="form-text" style="color:red" th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}">-->
-<!--                            </div>-->
-<!--                        </div>-->
 
                         <div class="mb-1 text-center">
-                            <input class="ml-3 btn btn-primary" type="submit" value="Sign up!"/>
+                            <input class="ml-3 btn btn-primary" type="submit" value="Save"/>
                             <a th:href="@{/auth/login}" class="ml-3 btn btn-primary" th:text="'Login'"></a>
                         </div>
                     </form>
