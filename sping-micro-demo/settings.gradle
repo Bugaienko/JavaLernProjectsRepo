@@ -1,0 +1,5 @@
+rootProject.name = 'sping-micro-demo'
+
+includeBuild 'eureka-server'
+includeBuild 'eureka-client'
+includeBuild 'api-gateway'
