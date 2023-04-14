@@ -1,0 +1,12 @@
+
+server:
+  port: 8088
+
+zuul:
+  routes:
+    api:
+      path: /api/**
+      url: http://localhost:8090/api
+    web:
+      path: /**
+      url: http://localhost:8083/
