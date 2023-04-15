@@ -8,6 +8,8 @@ import pizzaRest.models.Person;
 import pizzaRest.services.PersonService;
 
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,19 +38,45 @@ public class PersonValidator implements Validator {
         Optional<Person> resultByName = personService.findUserByUsername(targetPerson.getUsername());
         Optional<Person> resultByEmail = personService.findUserByEmail(targetPerson.getEmail());
 
-        if (resultByName.isPresent()){
+        if (resultByName.isPresent()) {
             errors.rejectValue("username", "", "This username is already in use. Choose another");
         }
 
-        if (resultByEmail.isPresent()){
+        if (resultByEmail.isPresent()) {
             errors.rejectValue("email", "", "This Email is already in use. Choose another");
+        }
+
+    }
+
+    public void validate(Object target, Person personActive, Errors errors) {
+        Person targetPerson = (Person) target;
+
+        Optional<Person> resultByName = personService.findUserByUsername(targetPerson.getUsername());
+        Optional<Person> resultByEmail = personService.findUserByEmail(targetPerson.getEmail());
+
+        if (resultByName.isPresent()) {
+            List<Person> persons = Collections.singletonList(resultByName.get());
+            for (Person p : persons) {
+                if (p.getId() != personActive.getId()) {
+                    errors.rejectValue("username", "", "This username is already in use. Choose another");
+                }
+            }
+        }
+
+        if (resultByEmail.isPresent()) {
+            List<Person> persons = Collections.singletonList(resultByEmail.get());
+            for (Person p : persons) {
+                if (p.getId() != personActive.getId()) {
+                    errors.rejectValue("email", "", "This Email is already in use. Choose another");
+                }
+            }
         }
 
     }
 
     public void validate(Object target, String rePassword, Errors errors) {
         Person targetPerson = (Person) target;
-        if (!targetPerson.getPassword().equals(rePassword)){
+        if (!targetPerson.getPassword().equals(rePassword)) {
             errors.rejectValue("password", "", "Passwords don't match");
         }
     }

@@ -37,13 +37,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/swagger-ui/**", "/v2/**").permitAll()
                 .antMatchers("/auth/registration", "/auth/login", "/error", "/", "/menu",
                         "/about", "/contact", "/cafe/pizza/*", "/pizza/addToFav/*", "/cafe", "/cafe/**").permitAll()
                 .antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/scss/**", "/favicon.ico").permitAll()
-                .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/auth/login", "/api/auth/signup", "api/users/login").permitAll()
+//                .antMatchers("/api/**").permitAll()
                 .antMatchers("/pizza/checkPrice/*", "pizza/setPrice/*").hasAnyRole("ADMIN")
                 .antMatchers("/user/*").hasAnyRole("USER", "ADMIN")
-                .anyRequest().hasAnyRole("USER", "ADMIN")
+//                .anyRequest().hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/auth/login")

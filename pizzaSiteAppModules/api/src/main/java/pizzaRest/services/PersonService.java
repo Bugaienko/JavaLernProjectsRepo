@@ -94,4 +94,13 @@ public class PersonService {
     public Person findOne(int personId) {
         return personRepository.findById(personId).orElseThrow(NotFoundException::new);
     }
+
+    @Transactional
+    public Person update(Person activePerson, Person person) {
+        activePerson.setUsername(person.getUsername());
+        activePerson.setPassword(passwordEncoder.encode(person.getPassword()));
+        activePerson.setEmail(person.getEmail());
+        logger.info("Update Person id={}", activePerson.getId());
+        return personRepository.save(activePerson);
+    }
 }
