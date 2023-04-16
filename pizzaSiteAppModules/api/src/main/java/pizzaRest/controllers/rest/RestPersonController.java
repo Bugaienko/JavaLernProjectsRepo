@@ -227,6 +227,7 @@ public class RestPersonController{
             produces = { "application/json" }
     )
     public ResponseEntity<PersonDTO> get(@ApiParam(value = "record id", required=true) @PathVariable("id") int id) {
+        System.out.println(id);
         return ResponseEntity.ok(convertToDtoPerson(personService.findOne(id)));
     }
 

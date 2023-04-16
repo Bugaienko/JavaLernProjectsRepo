@@ -9,4 +9,10 @@ zuul:
       url: http://localhost:8090/api
     web:
       path: /**
-      url: http://localhost:8083/**
+      url: http://localhost:8083/
+    auth:
+      path: /auth/login
+      url: http://localhost:8083/auth/login
+    reg:
+      path: /auth/registration
+      url: http://localhost:8083/auth/registration
