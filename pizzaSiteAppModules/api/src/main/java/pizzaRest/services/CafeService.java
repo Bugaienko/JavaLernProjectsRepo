@@ -10,6 +10,7 @@ import pizzaRest.models.Cafe;
 import pizzaRest.models.Pizza;
 import pizzaRest.repositiries.CafeRepository;
 import pizzaRest.repositiries.PizzaRepository;
+import pizzaRest.util.NotFoundException;
 
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class CafeService {
     }
 
     public Cafe findById(int id){
-        return cafeRepository.findById(id).get();
+        return cafeRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     public List<Cafe> findAll(){

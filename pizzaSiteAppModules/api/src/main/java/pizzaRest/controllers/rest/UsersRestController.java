@@ -63,6 +63,22 @@ public class UsersRestController implements UsersControllerInt {
         this.authUtil = authUtil;
     }
 
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(NotFoundException e) {
+        ErrorResponse response = new ErrorResponse(
+                "Object with this id wasn't found", System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleCreatedException(PersonNotCreatedException e) {
+        ErrorResponse response = new ErrorResponse(
+                e.getMessage(), System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
     /**
      * GET /api/users/all : Get all users
@@ -142,21 +158,7 @@ public class UsersRestController implements UsersControllerInt {
         return ResponseEntity.ok(map);
     }
 
-    @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleException(NotFoundException e) {
-        ErrorResponse response = new ErrorResponse(
-                "Object with this id wasn't found", System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
-    }
 
-    @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleCreatedException(PersonNotCreatedException e) {
-        ErrorResponse response = new ErrorResponse(
-                e.getMessage(), System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
 
     private Person convertToPerson(PersonDTO personDto) {
 //        ModelMapper mapper = new ModelMapper(); // Create Bean in config

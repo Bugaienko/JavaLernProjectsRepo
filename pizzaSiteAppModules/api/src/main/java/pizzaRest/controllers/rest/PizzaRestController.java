@@ -2,11 +2,9 @@ package pizzaRest.controllers.rest;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pizzaRest.controllers.interfases.PizzaControllerInt;
 import pizzaRest.dto.BaseDTO;
 import pizzaRest.dto.IngredientDTO;
@@ -19,8 +17,9 @@ import pizzaRest.models.TypeIngredient;
 import pizzaRest.services.BaseService;
 import pizzaRest.services.IngredientService;
 import pizzaRest.services.PizzaService;
+import pizzaRest.util.ErrorResponse;
+import pizzaRest.util.NotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +59,7 @@ public class PizzaRestController implements PizzaControllerInt {
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<PizzaDTO> getPizza(@PathVariable("id") int id) {
-        return null;
+        return ResponseEntity.ok(convertToPizzaDto(pizzaService.findById(id)));
     }
 
     private PizzaDTO convertToPizzaDto(Pizza pizza){
@@ -88,6 +87,14 @@ public class PizzaRestController implements PizzaControllerInt {
 
     private TypeDTO convertTypeTpDto(TypeIngredient typeIngredient){
         return modelMapper.map(typeIngredient, TypeDTO.class);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(NotFoundException e) {
+        ErrorResponse response = new ErrorResponse(
+                "Object with this id wasn't found", System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
     }
 
 

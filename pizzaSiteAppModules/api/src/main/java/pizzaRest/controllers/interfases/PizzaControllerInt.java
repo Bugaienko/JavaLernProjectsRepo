@@ -19,7 +19,7 @@ import pizzaRest.dto.PizzaDTO;
 
 import java.util.List;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-04-16T14:31:40.830807727Z[GMT]")
 @Validated
 public interface PizzaControllerInt {
 

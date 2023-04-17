@@ -19,6 +19,7 @@ import pizzaRest.dto.IngredientDTO;
 
 import java.util.List;
 
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-04-16T14:31:40.830807727Z[GMT]")
 @Validated
 public interface IngredientControllerInt {
     @Operation(summary = "Get all ingredients", description = "", security = {

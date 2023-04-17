@@ -3,6 +3,7 @@ package pizzaRest.models;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class Cafe {
     @NotEmpty(message = "City should be not empty")
     private String city;
     @Column(name = "email")
+    @Email
     @NotEmpty(message = "Email should be not empty")
     private String email;
     @Column(name = "phone")

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pizzaRest.models.*;
 import pizzaRest.repositiries.PizzaRepository;
+import pizzaRest.util.NotFoundException;
 
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class PizzaService {
     }
 
     public Pizza findById(int id) {
-        return pizzaRepository.findById(id).get();
+        return pizzaRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     public List<Cafe> findCafesByPizzaId(int pizzaId) {
