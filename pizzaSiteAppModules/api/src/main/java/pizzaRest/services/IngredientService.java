@@ -11,6 +11,7 @@ import pizzaRest.models.Pizza;
 import pizzaRest.models.TypeIngredient;
 import pizzaRest.repositiries.IngredientRepository;
 import pizzaRest.repositiries.TypesRepository;
+import pizzaRest.util.NotFoundException;
 
 
 import java.util.List;
@@ -66,11 +67,8 @@ public class IngredientService {
     }
 
     public Ingredient findById(int ingrId) {
-        Optional<Ingredient> ingredient =  ingredientRepository.findById(ingrId);
-        if (ingredient.isPresent()) {
-            return ingredient.get();
-        }
-        else return null;
+        return  ingredientRepository.findById(ingrId).orElseThrow(NotFoundException::new);
+
     }
 
     @Transactional

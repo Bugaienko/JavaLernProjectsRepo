@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pizzaRest.controllers.interfases.AuthControllerInt;
 import pizzaRest.dto.AuthenticationDTO;
 import pizzaRest.dto.PersonDTO;
 import pizzaRest.models.Person;
@@ -24,7 +25,6 @@ import pizzaRest.util.ErrorResponse;
 import pizzaRest.util.NotFoundException;
 import pizzaRest.util.PersonNotCreatedException;
 import pizzaRest.util.PersonValidator;
-
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -39,7 +39,7 @@ import java.util.Map;
 @Api(value = "Auth", description = "the Auth API")
 @RestController
 @RequestMapping("/api/auth")
-public class TestController  {
+public class AuthRestController implements AuthControllerInt {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -48,7 +48,7 @@ public class TestController  {
     private final PersonService personService;
 
     @Autowired
-    public TestController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, PersonValidator personValidator, ModelMapper modelMapper, PersonService personService) {
+    public AuthRestController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, PersonValidator personValidator, ModelMapper modelMapper, PersonService personService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.personValidator = personValidator;
@@ -74,7 +74,7 @@ public class TestController  {
             produces = { "application/json" },
             consumes = { "application/json" }
     )
-    public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO) {
+    public ResponseEntity<Map<String, String>> apiAuthLogin(@RequestBody AuthenticationDTO authenticationDTO) {
         UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(
                 authenticationDTO.getUsername(), authenticationDTO.getPassword());
 
@@ -83,18 +83,18 @@ public class TestController  {
         } catch (BadCredentialsException e){
             Map<String, String> map = new HashMap<>();
             map.put("message", "Incorrect credentials");
-            return map;
+            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
         }
 
         String token = jwtUtil.generateToken(authenticationDTO.getUsername());
         Map<String, String> resp = new HashMap<>();
         resp.put("jwt-token", token);
-        return resp;
+        return ResponseEntity.ok(resp);
 
     }
 
     @PostMapping("/signup")
-    public Map<String, String> createPerson(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, String>> apiAuthSignup(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult) {
 
         Person person = convertToPerson(personDTO);
 
@@ -116,7 +116,7 @@ public class TestController  {
 
         Map<String, String> map = new HashMap<>();
         map.put("jwt-token", token);
-        return map;
+        return ResponseEntity.ok(map);
 
     }
 

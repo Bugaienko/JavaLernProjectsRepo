@@ -55,24 +55,6 @@
 //    ResponseEntity<Void> addToMenu(@Parameter(in = ParameterIn.PATH, description = "cafe id", required=true, schema=@Schema()) @PathVariable("cafeId") Integer cafeId, @Parameter(in = ParameterIn.PATH, description = "pizza id", required=true, schema=@Schema()) @PathVariable("pizzaId") Integer pizzaId);
 //
 //
-//    @Operation(summary = "Authorization method", description = "Get jwt-token", tags={ "Auth" })
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "successful authorization", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse200.class))),
-//
-//            @ApiResponse(responseCode = "401", description = "Authentication failed") })
-//    @PostMapping(value = "/api/auth/login",
-//            produces = { "application/json" },
-//            consumes = { "application/json" })
-//    ResponseEntity<InlineResponse200> apiAuthLoginPost(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody AuthLoginBody body);
-//
-//
-//    @Operation(summary = "Registration new user", description = "Get jwt-token", tags={ "Auth" })
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Succsessful create new user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse200.class))) })
-//    @PosttMapping(value = "/api/auth/signup",
-//            produces = { "application/json" },
-//            consumes = { "application/json" })
-//    ResponseEntity<InlineResponse200> apiAuthSignupPost(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody AuthSignupBody body);
 //
 //
 //    @Operation(summary = "Create new Cafe", description = "create new cafe", security = {
@@ -100,29 +82,11 @@
 //    ResponseEntity<List<Cafe>> getAllCafes();
 //
 //
-//    @Operation(summary = "Get all ingredients", description = "", security = {
-//            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Ingredients" })
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ingredient.class)))),
-//
-//            @ApiResponse(responseCode = "401", description = "Access denied") })
-//    @GetMapping(value = "/api/ingredients/all",
-//            produces = { "application/json" })
-//    ResponseEntity<List<Ingredient>> getAllIngredients();
 //
 //
 //
 //
 //
-//    @Operation(summary = "Get all users", description = "", security = {
-//            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Person.class)))),
-//
-//            @ApiResponse(responseCode = "401", description = "Access denied") })
-//    @GetMapping(value = "/api/users/all",
-//            produces = { "application/json" })
-//    ResponseEntity<List<Person>> getAllUsers();
 //
 //
 //    @Operation(summary = "Get cafe", description = "Get one by id", security = {
@@ -139,32 +103,7 @@
 //    ResponseEntity<Cafe> getCafe(@Parameter(in = ParameterIn.PATH, description = "cafe id", required=true, schema=@Schema()) @PathVariable("cafeId") Integer cafeId);
 //
 //
-//    @Operation(summary = "Get list of Pizzas", description = "Show list of favorite pizzas", security = {
-//            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Pizza.class)))),
 //
-//            @ApiResponse(responseCode = "401", description = "Access denied"),
-//
-//            @ApiResponse(responseCode = "404", description = "Bad request parametr") })
-//    @RequestMapping(value = "/api/users/favorites/{id}",
-//            produces = { "application/json" },
-//            method = RequestMethod.GET)
-//    ResponseEntity<List<Pizza>> getFavorites(@Parameter(in = ParameterIn.PATH, description = "record id", required=true, schema=@Schema()) @PathVariable("id") Integer id);
-//
-//
-//    @Operation(summary = "Get ingredient", description = "Get one by id", security = {
-//            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Ingredients" })
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ingredient.class))),
-//
-//            @ApiResponse(responseCode = "401", description = "Access denied"),
-//
-//            @ApiResponse(responseCode = "404", description = "Request failed - No items") })
-//    @RequestMapping(value = "/api/ingredients/{id}",
-//            produces = { "application/json" },
-//            method = RequestMethod.GET)
-//    ResponseEntity<Ingredient> getIngredient(@Parameter(in = ParameterIn.PATH, description = "record id", required=true, schema=@Schema()) @PathVariable("id") Integer id);
 //
 //
 //    @Operation(summary = "Get list of Pizzas", description = "Show list of cafe pizzas", security = {
@@ -182,20 +121,6 @@
 //
 //
 //
-//    @Operation(summary = "Get user", description = "Get one by id", security = {
-//            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Person.class))),
-//
-//            @ApiResponse(responseCode = "401", description = "Access denied"),
-//
-//            @ApiResponse(responseCode = "404", description = "Request failed - No items") })
-//    @RequestMapping(value = "/api/users/{id}",
-//            produces = { "application/json" },
-//            method = RequestMethod.GET)
-//    ResponseEntity<Person> getUser(@Parameter(in = ParameterIn.PATH, description = "record id", required=true, schema=@Schema()) @PathVariable("id") Integer id);
-//
-//
 //    @Operation(summary = "Remove pizza from menu", description = "Remove pizza from cafes menu", security = {
 //            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Cafe" })
 //    @ApiResponses(value = {
@@ -208,20 +133,6 @@
 //            method = RequestMethod.POST)
 //    ResponseEntity<Void> removeFromMenu(@Parameter(in = ParameterIn.PATH, description = "cafe id", required=true, schema=@Schema()) @PathVariable("cafeId") Integer cafeId, @Parameter(in = ParameterIn.PATH, description = "pizza id", required=true, schema=@Schema()) @PathVariable("pizzaId") Integer pizzaId);
 //
-//
-//    @Operation(summary = "Change users info", description = "", security = {
-//            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = InlineResponse2001.class)))),
-//
-//            @ApiResponse(responseCode = "401", description = "Access denied"),
-//
-//            @ApiResponse(responseCode = "404", description = "Invalid data") })
-//    @RequestMapping(value = "/api/users/edit",
-//            produces = { "application/json" },
-//            consumes = { "application/json" },
-//            method = RequestMethod.PATCH)
-//    ResponseEntity<List<InlineResponse2001>> updateUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody UsersEditBody body);
 //
 //}
 //

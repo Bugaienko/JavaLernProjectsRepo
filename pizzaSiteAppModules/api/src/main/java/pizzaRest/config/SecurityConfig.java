@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -37,17 +38,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui/**", "/v2/**").permitAll()
+                .antMatchers("/swagger-ui/**", "/v2**", "/v3/**").permitAll()
+
 //                .antMatchers("/auth/registration", "/auth/login", "/error", "/", "/menu",
 //                        "/about", "/contact", "/cafe/pizza/*", "/pizza/addToFav/*", "/cafe", "/cafe/**").permitAll()
 //                .antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/scss/**", "/favicon.ico").permitAll()
-                .antMatchers("/api/auth/login", "/api/auth/signup", "api/users/login").permitAll()
+                .antMatchers("/api/auth/login", "/api/auth/signup", "api/users/login", "/api/auth/**").permitAll()
 //                .antMatchers("/api/**").permitAll()
 //                .antMatchers("/pizza/checkPrice/*", "pizza/setPrice/*").hasAnyRole("ADMIN")
 //                .antMatchers("/user/*").hasAnyRole("USER", "ADMIN")
 //                .anyRequest().hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
-//                .anyRequest().authenticated()
+//                .anyRequest().permitAll()
 //                .and()
 //                .formLogin()
 //                .loginPage("/auth/login")
@@ -66,7 +68,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
+
     }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v2/api-docs/**");
+         }
+
 
 
     @Override

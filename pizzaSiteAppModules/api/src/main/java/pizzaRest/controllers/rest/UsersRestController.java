@@ -12,9 +12,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pizzaRest.controllers.interfases.UsersControllerInt;
 import pizzaRest.dto.AuthenticationDTO;
 import pizzaRest.dto.PersonDTO;
 
+import pizzaRest.dto.PizzaDTO;
 import pizzaRest.models.Person;
 import pizzaRest.security.JwtUtil;
 import pizzaRest.services.PersonService;
@@ -37,7 +39,7 @@ import java.util.stream.Collectors;
 @Validated
 @Api(value = "Users", description = "the Users API")
 @RequestMapping("/api/users")
-public class RestPersonController{
+public class UsersRestController implements UsersControllerInt {
 
 
     private final PersonService personService;
@@ -49,7 +51,7 @@ public class RestPersonController{
 
 
     @Autowired
-    public RestPersonController(PersonService personService, PersonValidator personValidator, ModelMapper modelMapper, JwtUtil jwtUtil, AuthenticationManager authenticationManager, AuthUtil authUtil) {
+    public UsersRestController(PersonService personService, PersonValidator personValidator, ModelMapper modelMapper, JwtUtil jwtUtil, AuthenticationManager authenticationManager, AuthUtil authUtil) {
         this.personService = personService;
         this.personValidator = personValidator;
         this.modelMapper = modelMapper;
@@ -59,54 +61,6 @@ public class RestPersonController{
         this.authUtil = authUtil;
     }
 
-    @ApiIgnore
-    @PostMapping("/registration")
-    public Map<String, String> createPerson(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult) {
-
-        Person person = convertToPerson(personDTO);
-
-        personValidator.validate(person, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            StringBuilder errorMsg = new StringBuilder();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error : errors) {
-                errorMsg.append(error.getField()).append(" - ")
-                        .append(error.getDefaultMessage())
-                        .append(";");
-            }
-            throw new PersonNotCreatedException(errorMsg.toString());
-        }
-
-        personService.register(person);
-        String token = jwtUtil.generateToken(person.getUsername());
-
-        Map<String, String> map = new HashMap<>();
-        map.put("jwt-token", token);
-        return map;
-
-    }
-
-    @ApiIgnore
-    @PostMapping("/login")
-    public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO) {
-        UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(
-                authenticationDTO.getUsername(), authenticationDTO.getPassword());
-
-        try {
-            authenticationManager.authenticate(authInputToken);
-        } catch (BadCredentialsException e){
-            Map<String, String> map = new HashMap<>();
-            map.put("message", "Incorrect credentials");
-            return map;
-        }
-
-        String token = jwtUtil.generateToken(authenticationDTO.getUsername());
-        Map<String, String> resp = new HashMap<>();
-        resp.put("jwt-token", token);
-        return resp;
-
-    }
 
     /**
      * GET /api/users/all : Get all users
@@ -119,18 +73,21 @@ public class RestPersonController{
             @ApiResponse(code = 200, message = "Successful operation", response = PersonDTO.class, responseContainer = "List"),
             @ApiResponse(code = 401, message = "Access denied") })
     @GetMapping(value =  "/all", produces = { "application/json" })
-    public List<PersonDTO> getPersons() {
-        return personService.findAll().stream()
-                .map(this::convertToDtoPerson).collect(Collectors.toList());
+    public ResponseEntity<List<PersonDTO>> getAllUsers() {
+        return ResponseEntity.ok(personService.findAll().stream()
+                .map(this::convertToDtoPerson).collect(Collectors.toList()));
     }
 
-//    @GetMapping("/{id}")
-    public PersonDTO getPerson(@PathVariable("id") int personId) {
-        return convertToDtoPerson(personService.findOne(personId));
+    @Override
+    public ResponseEntity<List<PizzaDTO>> getFavorites(int id) {
+        //TODO
+        return null;
     }
+
+
 
     @ApiIgnore
-    @PostMapping("")
+    @PostMapping("/test")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid PersonDTO personDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             //TODO
@@ -149,8 +106,9 @@ public class RestPersonController{
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @Override
     @PostMapping(value = "/edit")
-    public ResponseEntity<Map<String, String>> editUser(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult){
+    public ResponseEntity<Map<String, String>> updateUser(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult){
         Person activePerson = authUtil.getActive();
 
         Person person = convertToPerson(personDTO);
@@ -226,10 +184,59 @@ public class RestPersonController{
             value = "/{id}",
             produces = { "application/json" }
     )
-    public ResponseEntity<PersonDTO> get(@ApiParam(value = "record id", required=true) @PathVariable("id") int id) {
-        System.out.println(id);
+    public ResponseEntity<PersonDTO> getUser(@ApiParam(value = "record id", required=true) @PathVariable("id") int id) {
         return ResponseEntity.ok(convertToDtoPerson(personService.findOne(id)));
     }
+
+    @ApiIgnore
+    @PostMapping("/registration")
+    public Map<String, String> createPerson(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult) {
+
+        Person person = convertToPerson(personDTO);
+
+        personValidator.validate(person, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder errorMsg = new StringBuilder();
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors) {
+                errorMsg.append(error.getField()).append(" - ")
+                        .append(error.getDefaultMessage())
+                        .append(";");
+            }
+            throw new PersonNotCreatedException(errorMsg.toString());
+        }
+
+        personService.register(person);
+        String token = jwtUtil.generateToken(person.getUsername());
+
+        Map<String, String> map = new HashMap<>();
+        map.put("jwt-token", token);
+        return map;
+
+    }
+
+    @ApiIgnore
+    @PostMapping("/login")
+    public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO) {
+        UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(
+                authenticationDTO.getUsername(), authenticationDTO.getPassword());
+
+        try {
+            authenticationManager.authenticate(authInputToken);
+        } catch (BadCredentialsException e){
+            Map<String, String> map = new HashMap<>();
+            map.put("message", "Incorrect credentials");
+            return map;
+        }
+
+        String token = jwtUtil.generateToken(authenticationDTO.getUsername());
+        Map<String, String> resp = new HashMap<>();
+        resp.put("jwt-token", token);
+        return resp;
+
+    }
+
 
 
 }
