@@ -64,14 +64,15 @@ public class PizzaRestController implements PizzaControllerInt {
     }
 
     private PizzaDTO convertToPizzaDto(Pizza pizza){
-       PizzaDTO pizzaDTO = new PizzaDTO(pizza.getId(), pizza.getName(), pizza.getPrice(), pizza.getImage());
-       pizzaDTO.setBase(convertToBaseDto(pizza.getBase()));
-       List<IngredientDTO> ingrDto = new ArrayList<>();
-       for (Ingredient ing: pizza.getIngredients()){
-           ingrDto.add(convertIngredientToDto(ing));
-       }
-       pizzaDTO.setIngredients(ingrDto);
-       return pizzaDTO;
+//       PizzaDTO pizzaDTO = new PizzaDTO(pizza.getId(), pizza.getName(), pizza.getPrice(), pizza.getImage());
+//       pizzaDTO.setBase(convertToBaseDto(pizza.getBase()));
+//       List<IngredientDTO> ingrDto = new ArrayList<>();
+//       for (Ingredient ing: pizza.getIngredients()){
+//           ingrDto.add(convertIngredientToDto(ing));
+//       }
+//       pizzaDTO.setIngredients(ingrDto);
+//       return pizzaDTO;
+        return modelMapper.map(pizza, PizzaDTO.class);
     }
 
 

@@ -1,6 +1,7 @@
 package pizzaRest.controllers.rest;
 
 import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import pizzaRest.dto.PersonDTO;
 
 import pizzaRest.dto.PizzaDTO;
 import pizzaRest.models.Person;
+import pizzaRest.models.Pizza;
 import pizzaRest.security.JwtUtil;
 import pizzaRest.services.PersonService;
 import pizzaRest.util.*;
@@ -68,6 +70,7 @@ public class UsersRestController implements UsersControllerInt {
      * @return Successful operation (status code 200)
      *         or Access denied (status code 401)
      */
+
     @ApiOperation(value = "Get all users", nickname = "getAll", notes = "", response = PersonDTO.class, responseContainer = "List", tags={ "Users", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful operation", response = PersonDTO.class, responseContainer = "List"),
@@ -81,12 +84,14 @@ public class UsersRestController implements UsersControllerInt {
     @Override
     public ResponseEntity<List<PizzaDTO>> getFavorites(int id) {
         //TODO
-        return null;
+        Person activePerson = personService.findOne(id);
+        List<PizzaDTO> pizzas = activePerson.getFavorites().stream().map(this::convertPizzaToDTO).collect(Collectors.toList());
+        return ResponseEntity.ok(pizzas);
     }
 
 
 
-    @ApiIgnore
+    @Hidden
     @PostMapping("/test")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid PersonDTO personDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -188,7 +193,7 @@ public class UsersRestController implements UsersControllerInt {
         return ResponseEntity.ok(convertToDtoPerson(personService.findOne(id)));
     }
 
-    @ApiIgnore
+    @Hidden
     @PostMapping("/registration")
     public Map<String, String> createPerson(@RequestBody @Valid PersonDTO personDTO, BindingResult bindingResult) {
 
@@ -216,7 +221,7 @@ public class UsersRestController implements UsersControllerInt {
 
     }
 
-    @ApiIgnore
+    @Hidden
     @PostMapping("/login")
     public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO) {
         UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(
@@ -238,5 +243,8 @@ public class UsersRestController implements UsersControllerInt {
     }
 
 
+    private PizzaDTO convertPizzaToDTO(Pizza pizza){
+        return modelMapper.map(pizza, PizzaDTO.class);
+    }
 
 }
