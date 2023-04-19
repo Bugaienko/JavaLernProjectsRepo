@@ -83,23 +83,5 @@
 //
 //
 //
-//
-//    @Operation(summary = "Remove pizza from users Favorites list", description = "Remove pizza", security = {
-//        @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
-//    @ApiResponses(value = {
-//        @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse2003.class))),
-//
-//        @ApiResponse(responseCode = "403", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-//
-//        @ApiResponse(responseCode = "404", description = "Request failed - No items", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))) })
-//    @RequestMapping(value = "/api/users/removeFromFav/{id}/{pizzaId}",
-//        produces = { "application/json" },
-//        method = RequestMethod.POST)
-//    ResponseEntity<InlineResponse2003> removeFromFavList(@Parameter(in = ParameterIn.PATH, description = "record id", required=true, schema=@Schema()) @PathVariable("id") Integer id, @Parameter(in = ParameterIn.PATH, description = "pizza id", required=true, schema=@Schema()) @PathVariable("pizzaId") Integer pizzaId);
-//
-//
-//
-//
-//
 //}
 //

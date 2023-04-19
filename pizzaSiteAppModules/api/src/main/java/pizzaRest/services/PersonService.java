@@ -13,7 +13,6 @@ import pizzaRest.repositiries.PizzaRepository;
 import pizzaRest.util.NotFoundException;
 
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -64,30 +63,42 @@ public class PersonService {
     }
 
     @Transactional
-    public void addPizzaToFav(Person person, Pizza pizza) {
+    public String addPizzaToFav(Person person, Pizza pizza) {
 //        List<Pizza> favorites2 = person.getFavorites();
         List<Pizza> favorites = pizzaRepository.findByPersons(person);
+        String responseStr;
+        responseStr = "Pizza id: " + pizza.getId() + " already in " + person.getUsername() + " fav list";
 
         if (!favorites.contains(pizza)) {
             favorites.add(pizza);
+            logger.info("Add Fav pizza{} to Person, personId={}", pizza.getId(), person.getId());
+            responseStr = "Pizza id: " + pizza.getId() + " was added to " + person.getUsername() + " fav list";
+            person.setFavorites(favorites);
+            personRepository.save(person);
         }
-        person.setFavorites(favorites);
-        personRepository.save(person);
-        logger.info("Add Fav pizza{} to Person, personId={}",pizza.getId(), person.getId());
+        return responseStr;
     }
 
     @Transactional
-    public void removePizzaFromFav(Person person, Pizza pizza) {
+    public String removePizzaFromFav(Person person, Pizza pizza) {
         List<Pizza> favorites = pizzaRepository.findByPersons(person);
-        favorites.remove(pizza);
-        person.setFavorites(favorites);
+        String responseStr;
+        responseStr = "Pizza id: " + pizza.getId() + " is not on " + person.getUsername() + " fav list";
 
-        personRepository.save(person);
-        logger.info("Del pizza{} from Person id={} Fav", pizza.getId(), person.getId());
+        if (favorites != null && favorites.contains(pizza)) {
+
+            favorites.remove(pizza);
+            person.setFavorites(favorites);
+            personRepository.save(person);
+            logger.info("Del pizza{} from Person id={} Fav", pizza.getId(), person.getId());
+
+            responseStr = "Pizza id: " + pizza.getId() + " was removed from " + person.getUsername() + " fav list";
+        }
+        return responseStr;
     }
 
     @Transactional
-    public void save(Person person){
+    public void save(Person person) {
         personRepository.save(person);
     }
 

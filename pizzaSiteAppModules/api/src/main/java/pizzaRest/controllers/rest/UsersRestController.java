@@ -2,6 +2,9 @@ package pizzaRest.controllers.rest;
 
 import io.swagger.annotations.*;
 import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,12 +21,14 @@ import pizzaRest.dto.AuthenticationDTO;
 import pizzaRest.dto.PersonDTO;
 
 import pizzaRest.dto.PizzaDTO;
+import pizzaRest.dto.responsesModel.InlineResponse2002;
+import pizzaRest.dto.responsesModel.InlineResponse2003;
 import pizzaRest.models.Person;
 import pizzaRest.models.Pizza;
 import pizzaRest.security.JwtUtil;
 import pizzaRest.services.PersonService;
+import pizzaRest.services.PizzaService;
 import pizzaRest.util.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 
 import javax.validation.Valid;
@@ -49,17 +54,19 @@ public class UsersRestController implements UsersControllerInt {
     private final ModelMapper modelMapper;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final PizzaService pizzaService;
     private final AuthUtil authUtil;
 
 
     @Autowired
-    public UsersRestController(PersonService personService, PersonValidator personValidator, ModelMapper modelMapper, JwtUtil jwtUtil, AuthenticationManager authenticationManager, AuthUtil authUtil) {
+    public UsersRestController(PersonService personService, PersonValidator personValidator, ModelMapper modelMapper, JwtUtil jwtUtil, AuthenticationManager authenticationManager, PizzaService pizzaService, AuthUtil authUtil) {
         this.personService = personService;
         this.personValidator = personValidator;
         this.modelMapper = modelMapper;
         this.jwtUtil = jwtUtil;
 
         this.authenticationManager = authenticationManager;
+        this.pizzaService = pizzaService;
         this.authUtil = authUtil;
     }
 
@@ -104,6 +111,7 @@ public class UsersRestController implements UsersControllerInt {
         List<PizzaDTO> pizzas = activePerson.getFavorites().stream().map(this::convertPizzaToDTO).collect(Collectors.toList());
         return ResponseEntity.ok(pizzas);
     }
+
 
 
 
@@ -158,6 +166,21 @@ public class UsersRestController implements UsersControllerInt {
         return ResponseEntity.ok(map);
     }
 
+    @Override
+    @PostMapping(value = "/addToFav/{id}/{pizzaId}", produces = { "application/json" })
+    public ResponseEntity<InlineResponse2002> addToFav(@Parameter(in = ParameterIn.PATH, description = "user id", required=true, schema=@Schema()) @PathVariable("id") int personId, @Parameter(in = ParameterIn.PATH, description = "pizza id", required=true, schema=@Schema()) @PathVariable("pizzaId") int pizzaId) {
+        Person person = personService.findOne(personId);
+        String responseStr = personService.addPizzaToFav(person, pizzaService.findById(pizzaId));
+        return ResponseEntity.ok(new InlineResponse2002(responseStr));
+    }
+
+    @Override
+    @PostMapping(value = "/removeFromFav/{id}/{pizzaId}", produces = { "application/json" })
+    public ResponseEntity<InlineResponse2003> removeFromFavList(int personId, int pizzaId) {
+        Person person = personService.findOne(personId);
+        String responseStr = personService.removePizzaFromFav(person, pizzaService.findById(pizzaId));
+        return ResponseEntity.ok(new InlineResponse2003(responseStr));
+    }
 
 
     private Person convertToPerson(PersonDTO personDto) {

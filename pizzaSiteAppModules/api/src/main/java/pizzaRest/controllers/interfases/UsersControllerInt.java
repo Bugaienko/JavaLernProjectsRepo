@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import pizzaRest.dto.BodyUserEdit;
 import pizzaRest.dto.PersonDTO;
 import pizzaRest.dto.PizzaDTO;
-import pizzaRest.dto.responsesModel.UpdateUserResponse200;
+import pizzaRest.dto.responsesModel.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -81,6 +81,34 @@ public interface UsersControllerInt {
             consumes = { "application/json" },
             method = RequestMethod.PATCH)
     ResponseEntity<Map<String, String>> updateUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema(implementation = BodyUserEdit.class)) @Valid @RequestBody PersonDTO personDTO, BindingResult bindingResult);
+
+
+
+    @Operation(summary = "Add pizza to users Favorites list", description = "Add pizza", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse2002.class))),
+
+            @ApiResponse(responseCode = "403", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminOnlyResponse403.class))),
+
+            @ApiResponse(responseCode = "404", description = "Request failed - No items", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BadDataResponse404.class))) })
+    @PostMapping(value = "/api/users/addToFav/{id}/{pizzaId}", produces = { "application/json" })
+    ResponseEntity<InlineResponse2002> addToFav(@Parameter(in = ParameterIn.PATH, description = "user id", required=true, schema=@Schema()) @PathVariable("id") int id, @Parameter(in = ParameterIn.PATH, description = "pizza id", required=true, schema=@Schema()) @PathVariable("pizzaId") int pizzaId);
+
+
+
+
+
+    @Operation(summary = "Remove pizza from users Favorites list", description = "Remove pizza", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse2003.class))),
+
+            @ApiResponse(responseCode = "403", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminOnlyResponse403.class))),
+
+            @ApiResponse(responseCode = "404", description = "Request failed - No items", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BadDataResponse404.class))) })
+    @PostMapping(value = "/api/users/removeFromFav/{id}/{pizzaId}", produces = { "application/json" })
+    ResponseEntity<InlineResponse2003> removeFromFavList(@Parameter(in = ParameterIn.PATH, description = "user id", required=true, schema=@Schema()) @PathVariable("id") int id, @Parameter(in = ParameterIn.PATH, description = "pizza id", required=true, schema=@Schema()) @PathVariable("pizzaId") int pizzaId);
 
 
 
