@@ -2,10 +2,10 @@ openapi: 3.0.0
 
 info:
   title: Pizza project API
-  version: 1.0.0
+  version: 1.1.0
   description: |
     Pizza API allows you to remotely manage the pizzeria.
-    ### Check out its awesome features:
+    ### Description of the project and requirements:
     * Authorization is required to work with the API. Authorization is done by the bearer-token 😎
 
 
@@ -554,7 +554,7 @@ paths:
         '401':
           description: Access denied
           content:
-            apllication/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -564,7 +564,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            apllication/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -595,7 +595,7 @@ paths:
         '401':
           description: Access denied
           content:
-            apllication/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -605,7 +605,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            apllication/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -641,7 +641,7 @@ paths:
         '401':
           description: Access denied
           content:
-            apllication/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -651,7 +651,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            apllication/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -678,7 +678,7 @@ paths:
         '401':
           description: Access denied
           content:
-            apllication/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -688,7 +688,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            apllication/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -712,10 +712,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pizza'
-        '401':
+        '403':
           description: Access denied
           content:
-            apllication/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -725,7 +725,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            apllication/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -734,13 +734,171 @@ paths:
                     example: "The data entered is not correct"
 
 
+  #New methods
+  /api/admin/pizza/change/{pizzaId}:
+    post:
+      summary: Change pizza (Admin only)
+      description: Change pizza
+      operationId: change pizza
+      tags:
+        - Admin
+      parameters:
+        - $ref: '#/components/parameters/pizzaId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyPizza'
+      responses:
+        '200' :
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizza'
+        '403':
+          description: Access denied
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Only admins are allowed access"
+        '404':
+          description: Incorrect data
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The data entered is not correct"
+  /api/admin/ingredient/change/{id}:
+    post:
+      summary: Change ingredient (Admin only)
+      description: Change ingredient
+      operationId: change ingredient
+      tags:
+        - Admin
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyIngredient'
+      responses:
+        '200' :
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '403':
+          description: Access denied
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Only admins are allowed access"
+        '404':
+          description: Incorrect data
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The data entered is not correct"
+  /api/admin/base/add:
+    post:
+      summary: Add base (Admin only)
+      description: Add base
+      operationId: Add new base
+      tags:
+        - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyBase'
+      responses:
+        '200' :
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Base'
+        '403':
+          description: Access denied
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Only admins are allowed access"
+        '404':
+          description: Incorrect data
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The data entered is not correct"
 
 
-
-
-
-
-
+  /api/admin/base/change/{id}:
+    post:
+      summary: Change base (Admin only)
+      description: Change base
+      operationId: change base fields
+      tags:
+        - Admin
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyBase'
+      responses:
+        '200' :
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Base'
+        '403':
+          description: Access denied
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Only admins are allowed access"
+        '404':
+          description: Incorrect data
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The data entered is not correct"
 
 
 
@@ -811,6 +969,22 @@ components:
         price:
           type: number
           example: '3.50'
+    BodyBase:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Thin crust'
+        size:
+          type: string
+          enum:
+            - 'Small'
+            - 'Medium'
+            - 'Large'
+          # example: 'Small/Medium/Large'
+        price:
+          type: number
+          example: '3.50'
     TypeOfInredient:
       type: object
       properties:
@@ -837,6 +1011,27 @@ components:
           example: 'i_bacon.jpg'
         type:
           $ref: '#/components/schemas/TypeOfInredient'
+    BodyIngredient:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Royal Cheese'
+        price:
+          type: number
+          example: '3.50'
+        type_id:
+          type: integer
+          example: 3
+        image:
+          type: string
+          example: 'royal_chesse.jpg'
+      required:
+        - name
+        - price
+        - type_id
+
+
 
     Pizza:
       type: object
