@@ -66,6 +66,11 @@ public class IngredientService {
         logger.info("Create new ingredient {}", ingredient.getName());
     }
 
+    @Transactional
+    public void create(Ingredient ingredient){
+       ingredientRepository.save(ingredient);
+    }
+
     public Ingredient findById(int ingrId) {
         return  ingredientRepository.findById(ingrId).orElseThrow(NotFoundException::new);
 

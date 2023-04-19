@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pizzaRest.models.TypeIngredient;
 import pizzaRest.repositiries.TypesRepository;
+import pizzaRest.util.NotFoundException;
 
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class TypeService {
     }
 
     public TypeIngredient findById(int id) {
-        return typesRepository.findById(id).get();
+        return typesRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Transactional

@@ -24,12 +24,16 @@ import java.util.Optional;
 public class PizzaService {
 
     private final PizzaRepository pizzaRepository;
+    private final IngredientService ingredientService;
+    private final BaseService baseService;
     private final Logger logger = LoggerFactory.getLogger(PizzaService.class);
 
 
     @Autowired
-    public PizzaService(PizzaRepository pizzaRepository) {
+    public PizzaService(PizzaRepository pizzaRepository, IngredientService ingredientService, BaseService baseService) {
         this.pizzaRepository = pizzaRepository;
+        this.ingredientService = ingredientService;
+        this.baseService = baseService;
     }
 
     public List<Pizza> findAll() {
@@ -109,5 +113,58 @@ public class PizzaService {
 
         logger.info("Update pizza {}/{}", pizzaData.getId(), pizzaData.getName());
         return pizzaRepository.save(pizzaData);
+    }
+
+    public List<Pizza> findByCafes(Cafe cafe) {
+        return pizzaRepository.findByCafes(cafe, Sort.by("name"));
+    }
+
+    @Transactional
+    public Pizza addIngredientsList(Pizza pizza, List<Integer> ingredintsIdList) {
+        List<Ingredient> ingredients = pizza.getIngredients();
+        for (Integer ing_id: ingredintsIdList){
+            Ingredient ingredient = ingredientService.findById(ing_id);
+            if (!ingredients.contains(ingredient)){
+                ingredients.add(ingredient);
+            }
+        }
+        pizza.setIngredients(ingredients);
+        logger.info("Add list of ingredients to pizza id:{}", pizza.getId());
+        return pizzaRepository.save(pizza);
+    }
+
+    @Transactional
+    public Pizza removeIngredientFromPizza(Pizza pizza, int ingredientId) {
+        List<Ingredient> ingredients = pizza.getIngredients();
+        Ingredient ingredient = ingredientService.findById(ingredientId);
+        if (!ingredients.contains(ingredient)){
+            logger.info("trying to remove an ingredient id:{} that is not in the pizza id:{}", ingredientId, pizza.getId());
+        } else {
+            ingredients.remove(ingredient);
+            logger.info("remove ingredient id:{} from pizza id:{}", ingredientId, pizza.getId());
+            pizza.setIngredients(ingredients);
+            pizza = pizzaRepository.save(pizza);
+        }
+        return pizza;
+    }
+
+    @Transactional
+    public Pizza changeBase(Pizza pizza, int baseId) {
+        Base base = baseService.findById(baseId);
+        if (pizza.getBase().getId() != baseId){
+            pizza.setBase(base);
+            pizza = pizzaRepository.save(pizza);
+            logger.info("Change base id{} of pizza id{}", baseId, pizza.getId());
+        }
+        return pizza;
+    }
+
+    @Transactional
+    public Pizza createNewFromBody(Pizza pizza, int baseId) {
+        Base base = baseService.findById(baseId);
+        pizza.setBase(base);
+        pizza = pizzaRepository.save(pizza);
+        logger.info("Create new pizza id:{} from rest api", pizza.getId());
+        return pizza;
     }
 }

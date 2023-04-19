@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import pizzaRest.dto.AuthenticationDTO;
 import pizzaRest.dto.PersonDTO;
+import pizzaRest.dto.responsesModel.JwtTokenResponse200;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -23,7 +24,7 @@ import java.util.Map;
 public interface AuthControllerInt {
     @Operation(summary = "Authorization method", description = "Get jwt-token", tags={ "Auth" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful authorization", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Object.class))),
+            @ApiResponse(responseCode = "200", description = "successful authorization", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtTokenResponse200.class))),
 
             @ApiResponse(responseCode = "401", description = "Authentication failed") })
     @PostMapping(value = "/api/auth/login",
@@ -33,7 +34,7 @@ public interface AuthControllerInt {
 
     @Operation(summary = "Registration new user", description = "Get jwt-token", tags={ "Auth" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Succsessful create new user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Object.class))) })
+            @ApiResponse(responseCode = "200", description = "Succsessful create new user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtTokenResponse200.class))) })
     @PostMapping(value = "/api/auth/signup",
             produces = { "application/json" },
             consumes = { "application/json" })

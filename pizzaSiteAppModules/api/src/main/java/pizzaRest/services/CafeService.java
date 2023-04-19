@@ -33,11 +33,11 @@ public class CafeService {
         this.pizzaRepository = pizzaRepository;
     }
 
-    public Cafe findById(int id){
+    public Cafe findById(int id) {
         return cafeRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
-    public List<Cafe> findAll(){
+    public List<Cafe> findAll() {
         return cafeRepository.findAll();
     }
 
@@ -64,7 +64,7 @@ public class CafeService {
         Cafe cafe = cafeRepository.getReferenceById(cafeId);
         List<Pizza> pizzas = cafe.getPizzas();
 
-        if (!pizzas.contains(pizza)){
+        if (!pizzas.contains(pizza)) {
             pizzas.add(pizza);
         }
         cafe.setPizzas(pizzas);
@@ -84,5 +84,10 @@ public class CafeService {
 
         cafeRepository.save(cafe);
         logger.info("Remove pizza id{} from Cafe id{}", pizza.getId(), cafe.getId());
+    }
+
+    @Transactional
+    public void save(Cafe cafe) {
+        cafeRepository.save(cafe);
     }
 }

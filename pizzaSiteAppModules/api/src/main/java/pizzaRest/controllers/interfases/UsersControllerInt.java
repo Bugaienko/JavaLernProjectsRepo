@@ -13,8 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pizzaRest.dto.BodyUserEdit;
 import pizzaRest.dto.PersonDTO;
 import pizzaRest.dto.PizzaDTO;
+import pizzaRest.dto.responsesModel.UpdateUserResponse200;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -69,7 +71,7 @@ public interface UsersControllerInt {
     @Operation(summary = "Change users info", description = "", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Object.class)))),
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UpdateUserResponse200.class)))),
 
             @ApiResponse(responseCode = "401", description = "Access denied"),
 
@@ -78,7 +80,7 @@ public interface UsersControllerInt {
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.PATCH)
-    ResponseEntity<Map<String, String>> updateUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody PersonDTO personDTO, BindingResult bindingResult);
+    ResponseEntity<Map<String, String>> updateUser(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema(implementation = BodyUserEdit.class)) @Valid @RequestBody PersonDTO personDTO, BindingResult bindingResult);
 
 
 

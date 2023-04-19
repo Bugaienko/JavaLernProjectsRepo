@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
  * @author Sergii Bugaienko
  */
 
-public class CafeAddBody {
+public class BodyAddCafe {
 
 
     @NotEmpty(message = "Title should be not empty")
@@ -25,7 +25,7 @@ public class CafeAddBody {
 
     private String image;
 
-    public CafeAddBody() {
+    public BodyAddCafe() {
     }
 
     public String getTitle() {

@@ -12,10 +12,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pizzaRest.dto.CafeAddBody;
 import pizzaRest.dto.CafeDTO;
+import pizzaRest.dto.PizzaDTO;
+import pizzaRest.dto.responsesModel.AcssessDeneidedResponse403;
+import pizzaRest.dto.responsesModel.BadDataResponse404;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-04-16T14:31:40.830807727Z[GMT]")
@@ -28,7 +29,7 @@ public interface CafeControllerInt {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CafeDTO.class)))),
 
-            @ApiResponse(responseCode = "401", description = "Access denied")})
+            @ApiResponse(responseCode = "403", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AcssessDeneidedResponse403.class)))})
     @GetMapping(value = "/api/cafe/all",
             produces = {"application/json"})
     ResponseEntity<List<CafeDTO>> getAllCafes();
@@ -39,51 +40,28 @@ public interface CafeControllerInt {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CafeDTO.class))),
 
-            @ApiResponse(responseCode = "401", description = "Access denied"),
+            @ApiResponse(responseCode = "403", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AcssessDeneidedResponse403.class))),
 
-            @ApiResponse(responseCode = "404", description = "Request failed - No items")})
+            @ApiResponse(responseCode = "404", description = "Request failed - No items", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BadDataResponse404.class)))})
     @GetMapping(value = "/api/cafe/{cafeId}",
             produces = {"application/json"})
     ResponseEntity<CafeDTO> getCafe(@Parameter(in = ParameterIn.PATH, description = "cafe id", required = true, schema = @Schema()) @PathVariable("cafeId") int cafeId);
 
 
-    @Operation(summary = "Create new Cafe", description = "create new cafe", security = {
+
+
+
+
+    @Operation(summary = "Get list of Pizzas", description = "Show list of cafe pizzas", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Cafe" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ok", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CafeDTO.class))),
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PizzaDTO.class)))),
 
-            @ApiResponse(responseCode = "401", description = "Access denied"),
+            @ApiResponse(responseCode = "401", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AcssessDeneidedResponse403.class))),
 
-            @ApiResponse(responseCode = "404", description = "Request failed - No items") })
-    @PostMapping(value = "/api/cafe/add",
-            produces = { "application/json" },
-            consumes = { "application/json" })
-    ResponseEntity<CafeDTO> createCafe(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody CafeAddBody body);
+            @ApiResponse(responseCode = "404", description = "Bad request parametr", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BadDataResponse404.class))) })
+    @GetMapping(value = "/api/cafe/menu/{cafeId}", produces = { "application/json" })
+    ResponseEntity<List<PizzaDTO>> getMenu(@Parameter(in = ParameterIn.PATH, description = "cafe id", required=true, schema=@Schema()) @PathVariable("cafeId") int cafeId);
 
-
-
-    @Operation(summary = "Add pizza to menu", description = "Add pizza to cafes menu", security = {
-            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Cafe" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-
-            @ApiResponse(responseCode = "401", description = "Access denied"),
-
-            @ApiResponse(responseCode = "406", description = "Bad request parametrs") })
-    @PostMapping(value = "/api/cafe/menu/add/{cafeId}/{pizzaId}")
-    ResponseEntity<Void> addToMenu(@Parameter(in = ParameterIn.PATH, description = "cafe id", required=true, schema=@Schema()) @PathVariable("cafeId") int cafeId, @Parameter(in = ParameterIn.PATH, description = "pizza id", required=true, schema=@Schema()) @PathVariable("pizzaId") int pizzaId);
-
-
-
-    @Operation(summary = "Remove pizza from menu", description = "Remove pizza from cafes menu", security = {
-            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Cafe" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-
-            @ApiResponse(responseCode = "401", description = "Access denied"),
-
-            @ApiResponse(responseCode = "404", description = "Bad request parametr") })
-    @PostMapping(value = "/api/cafe/menu/remove/{cafeId}/{pizzaId}")
-    ResponseEntity<Void> removeFromMenu(@Parameter(in = ParameterIn.PATH, description = "cafe id", required=true, schema=@Schema()) @PathVariable("cafeId") int cafeId, @Parameter(in = ParameterIn.PATH, description = "pizza id", required=true, schema=@Schema()) @PathVariable("pizzaId") int pizzaId);
 
 }

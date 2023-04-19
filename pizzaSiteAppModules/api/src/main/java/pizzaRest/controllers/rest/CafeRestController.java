@@ -5,19 +5,23 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pizzaRest.controllers.interfases.CafeControllerInt;
-import pizzaRest.dto.CafeAddBody;
+import pizzaRest.dto.BodyAddCafe;
 import pizzaRest.dto.CafeDTO;
+import pizzaRest.dto.PizzaDTO;
 import pizzaRest.models.Cafe;
+import pizzaRest.models.Pizza;
 import pizzaRest.services.CafeService;
+import pizzaRest.services.PizzaService;
 import pizzaRest.util.ErrorResponse;
 import pizzaRest.util.NotFoundException;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,10 +38,13 @@ public class CafeRestController implements CafeControllerInt {
 
     private final ModelMapper modelMapper;
     private final CafeService cafeService;
+    private final PizzaService pizzaService;
+    private final Logger logger = LoggerFactory.getLogger(CafeRestController.class);
 
-    public CafeRestController(ModelMapper modelMapper, CafeService cafeService) {
+    public CafeRestController(ModelMapper modelMapper, CafeService cafeService, PizzaService pizzaService) {
         this.modelMapper = modelMapper;
         this.cafeService = cafeService;
+        this.pizzaService = pizzaService;
     }
 
 
@@ -53,32 +60,25 @@ public class CafeRestController implements CafeControllerInt {
         return ResponseEntity.ok(convertCafeToDTO(cafeService.findById(cafeId)));
     }
 
-    @Override
-    @PostMapping(value = "/add", produces = { "application/json" }, consumes = { "application/json" })
-    public ResponseEntity<CafeDTO> createCafe(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody CafeAddBody body) {
-        Cafe newCafe = convertToCafeFromBody(body);
-        cafeService.create(newCafe);
-        return ResponseEntity.ok(convertCafeToDTO(newCafe));
-    }
 
     @Override
-    @PostMapping(value = "/menu/add/{cafeId}/{pizzaId}")
-    public ResponseEntity<Void> addToMenu(@Parameter(in = ParameterIn.PATH, description = "cafe id", required=true, schema=@Schema()) @PathVariable("cafeId") int cafeId, @Parameter(in = ParameterIn.PATH, description = "pizza id", required=true, schema=@Schema()) @PathVariable("pizzaId") int pizzaId) {
-        return null;
+    @GetMapping(value = "/menu/{cafeId}", produces = { "application/json" })
+    public ResponseEntity<List<PizzaDTO>> getMenu(int cafeId) {
+        Cafe cafe = cafeService.findById(cafeId);
+        return ResponseEntity.ok(pizzaService.findByCafes(cafe).stream().map(this::convertPizzaToDto).collect(Collectors.toList()));
     }
 
-    @Override
-    @PostMapping(value = "/menu/remove/{cafeId}/{pizzaId}")
-    public ResponseEntity<Void> removeFromMenu(@Parameter(in = ParameterIn.PATH, description = "cafe id", required=true, schema=@Schema()) @PathVariable("cafeId") int cafeId, @Parameter(in = ParameterIn.PATH, description = "pizza id", required=true, schema=@Schema()) @PathVariable("pizzaId") int pizzaId) {
-        return null;
-    }
 
-    private CafeDTO convertCafeToDTO(Cafe cafe){
+    private CafeDTO convertCafeToDTO(Cafe cafe) {
         return modelMapper.map(cafe, CafeDTO.class);
     }
 
-    private Cafe convertToCafeFromBody(CafeAddBody addBody){
+    private Cafe convertToCafeFromBody(BodyAddCafe addBody) {
         return modelMapper.map(addBody, Cafe.class);
+    }
+
+    private PizzaDTO convertPizzaToDto(Pizza pizza){
+        return modelMapper.map(pizza, PizzaDTO.class);
     }
 
     @ExceptionHandler

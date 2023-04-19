@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import pizzaRest.controllers.interfases.AuthControllerInt;
 import pizzaRest.dto.AuthenticationDTO;
 import pizzaRest.dto.PersonDTO;
+import pizzaRest.dto.responsesModel.JwtTokenResponse200;
 import pizzaRest.models.Person;
 import pizzaRest.security.JwtUtil;
 import pizzaRest.services.PersonService;
@@ -63,16 +64,14 @@ public class AuthRestController implements AuthControllerInt {
      *
      * @param PersoDTO  (optional)
      * @return successful authorization (status code 200)
-     *         or Authentication failed (status code 400)
+     *         or Authentication failed (status code 401)
      */
     @ApiOperation(value = "Authorization method", nickname = "apiAuthLoginPost", notes = "Get jwt-token", response = Object.class, tags={ "Auth", })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful authorization", response = Object.class),
-            @ApiResponse(code = 400, message = "Authentication failed") })
+            @ApiResponse(code = 200, message = "successful authorization", response = JwtTokenResponse200.class),
+            @ApiResponse(code = 401, message = "Authentication failed") })
     @PostMapping(
-            value = "/login",
-            produces = { "application/json" },
-            consumes = { "application/json" }
+            value = "/login", produces = { "application/json" }, consumes = { "application/json" }
     )
     public ResponseEntity<Map<String, String>> apiAuthLogin(@RequestBody AuthenticationDTO authenticationDTO) {
         UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(

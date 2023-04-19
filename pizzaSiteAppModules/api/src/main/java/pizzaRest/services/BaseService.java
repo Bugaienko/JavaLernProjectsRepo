@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pizzaRest.models.Base;
 import pizzaRest.repositiries.BaseRepository;
+import pizzaRest.util.NotFoundException;
 
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class BaseService {
     }
 
     public Base findById(int baseId) {
-        return baseRepository.findById(baseId).get();
+        return baseRepository.findById(baseId).orElseThrow(NotFoundException::new);
     }
 
 
