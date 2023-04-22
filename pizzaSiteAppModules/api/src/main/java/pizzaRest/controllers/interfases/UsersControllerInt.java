@@ -59,12 +59,11 @@ public interface UsersControllerInt {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonDTO.class))),
 
-            @ApiResponse(responseCode = "401", description = "Access denied"),
+            @ApiResponse(responseCode = "401", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminOnlyResponse403.class))),
 
-            @ApiResponse(responseCode = "404", description = "Request failed - No items") })
-    @RequestMapping(value = "/api/users/{id}",
-            produces = { "application/json" },
-            method = RequestMethod.GET)
+            @ApiResponse(responseCode = "404", description = "Request failed - No items", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BadDataResponse404.class))) })
+    @GetMapping(value = "/api/users/{id}",
+            produces = { "application/json" })
     ResponseEntity<PersonDTO> getUser(@Parameter(in = ParameterIn.PATH, description = "record id", required=true, schema=@Schema()) @PathVariable("id") int id);
 
 

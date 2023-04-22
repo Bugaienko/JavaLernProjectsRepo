@@ -21,6 +21,8 @@ import pizzaRest.dto.AuthenticationDTO;
 import pizzaRest.dto.PersonDTO;
 
 import pizzaRest.dto.PizzaDTO;
+import pizzaRest.dto.responsesModel.AcssessDeneidedResponse403;
+import pizzaRest.dto.responsesModel.BadDataResponse404;
 import pizzaRest.dto.responsesModel.InlineResponse2002;
 import pizzaRest.dto.responsesModel.InlineResponse2003;
 import pizzaRest.models.Person;
@@ -75,11 +77,11 @@ public class UsersRestController implements UsersControllerInt {
         ErrorResponse response = new ErrorResponse(
                 "Object with this id wasn't found", System.currentTimeMillis()
         );
-        return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleCreatedException(PersonNotCreatedException e) {
+    private ResponseEntity<ErrorResponse> handleCreatedException(EntityNotCreatedException e) {
         ErrorResponse response = new ErrorResponse(
                 e.getMessage(), System.currentTimeMillis()
         );
@@ -127,7 +129,7 @@ public class UsersRestController implements UsersControllerInt {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new PersonNotCreatedException(errorMsg.toString());
+            throw new EntityNotCreatedException(errorMsg.toString());
         }
         Person person = convertToPerson(personDto);
         personService.register(person);
@@ -152,7 +154,7 @@ public class UsersRestController implements UsersControllerInt {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new PersonNotCreatedException(errorMsg.toString());
+            throw new EntityNotCreatedException(errorMsg.toString());
         }
 
         personService.update(activePerson, person);
@@ -205,16 +207,10 @@ public class UsersRestController implements UsersControllerInt {
      *         or Access denied (status code 401)
      *         or Request failed - No items (status code 404)
      */
-    @ApiOperation(value = "Get user", nickname = "get", notes = "Get one by id", response = PersonDTO.class, tags={ "Users", })
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful operation", response = PersonDTO.class),
-            @ApiResponse(code = 401, message = "Access denied"),
-            @ApiResponse(code = 404, message = "Request failed - No items") })
-    @GetMapping(
-            value = "/{id}",
-            produces = { "application/json" }
+
+    @GetMapping(value = "/{id}", produces = { "application/json" }
     )
-    public ResponseEntity<PersonDTO> getUser(@ApiParam(value = "record id", required=true) @PathVariable("id") int id) {
+    public ResponseEntity<PersonDTO> getUser(@ApiParam(value = "user id", required=true) @PathVariable("id") int id) {
         return ResponseEntity.ok(convertToDtoPerson(personService.findOne(id)));
     }
 
@@ -234,7 +230,7 @@ public class UsersRestController implements UsersControllerInt {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new PersonNotCreatedException(errorMsg.toString());
+            throw new EntityNotCreatedException(errorMsg.toString());
         }
 
         personService.register(person);
@@ -271,5 +267,7 @@ public class UsersRestController implements UsersControllerInt {
     private PizzaDTO convertPizzaToDTO(Pizza pizza){
         return modelMapper.map(pizza, PizzaDTO.class);
     }
+
+
 
 }

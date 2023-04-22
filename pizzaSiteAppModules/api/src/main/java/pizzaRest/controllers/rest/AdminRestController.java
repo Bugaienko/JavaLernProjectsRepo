@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -45,10 +46,12 @@ public class AdminRestController implements AdminControllerInterface {
     private final PersonValidator personValidator;
     private final IngredientService ingredientService;
     private final PizzaValidator pizzaValidator;
+    private final BaseValidator baseValidator;
+    private final BaseService baseService;
     private final JwtUtil jwtUtil;
     private final Logger logger = LoggerFactory.getLogger(CafeRestController.class);
 
-    public AdminRestController(ModelMapper modelMapper, CafeService cafeService, PizzaService pizzaService, TypeService typeService, PersonService personService, PersonValidator personValidator, IngredientService ingredientService, PizzaValidator pizzaValidator, JwtUtil jwtUtil) {
+    public AdminRestController(ModelMapper modelMapper, CafeService cafeService, PizzaService pizzaService, TypeService typeService, PersonService personService, PersonValidator personValidator, IngredientService ingredientService, PizzaValidator pizzaValidator, BaseValidator baseValidator, BaseService baseService, JwtUtil jwtUtil) {
         this.modelMapper = modelMapper;
         this.cafeService = cafeService;
         this.pizzaService = pizzaService;
@@ -57,6 +60,8 @@ public class AdminRestController implements AdminControllerInterface {
         this.personValidator = personValidator;
         this.ingredientService = ingredientService;
         this.pizzaValidator = pizzaValidator;
+        this.baseValidator = baseValidator;
+        this.baseService = baseService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -110,8 +115,8 @@ public class AdminRestController implements AdminControllerInterface {
     }
 
     @Override
-    @PostMapping(value = "/ingredients/add", produces = { "application/json" }, consumes = { "application/json" })
-    public ResponseEntity<IngredientDTO> addIngredient(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody BodeAddIngredient body) {
+    @PostMapping(value = "/ingredients/add", produces = {"application/json"}, consumes = {"application/json"})
+    public ResponseEntity<IngredientDTO> addIngredient(@Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @Valid @RequestBody BodeAddIngredient body) {
         TypeIngredient type = typeService.findById(body.getType_id());
         Ingredient ingredient = convertBodyToIngredient(body);
         ingredient.setType(type);
@@ -138,7 +143,6 @@ public class AdminRestController implements AdminControllerInterface {
     }
 
 
-
     @Override
     @PostMapping(value = "/users/edit/{id}")
     public ResponseEntity<Map<String, String>> apiAdminUsersEditIdPost(int id, BodyUserEdit body, BindingResult bindingResult) {
@@ -156,7 +160,7 @@ public class AdminRestController implements AdminControllerInterface {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new PersonNotCreatedException(errorMsg.toString());
+            throw new EntityNotCreatedException(errorMsg.toString());
         }
 
         personService.update(activePerson, person);
@@ -201,6 +205,63 @@ public class AdminRestController implements AdminControllerInterface {
         return ResponseEntity.ok(convertPizzaToDto(pizza));
     }
 
+    @Override
+    @PostMapping(value = "/base/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = {"application/json"})
+    public ResponseEntity<BaseDTO> addNewBase(@Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @RequestBody @Valid BodyBase body, BindingResult bindingResult) {
+//        System.out.println("base/add " + body.getSize() + " " + body.getName() + " " + body.getPrice());
+
+        Base newBase = convertToBaseFromBody(body);
+
+        baseValidator.validate(newBase, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder errorMsg = new StringBuilder();
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors) {
+                errorMsg.append(error.getField()).append(" - ")
+                        .append(error.getDefaultMessage())
+                        .append(";");
+            }
+            throw new EntityNotCreatedException(errorMsg.toString());
+        }
+        BaseDTO baseDTO = convertBaseToDTO(baseService.create(newBase));
+
+        return ResponseEntity.ok(baseDTO);
+    }
+
+    @Override
+    @PostMapping(value = "/base/change/{id}", produces = {"application/json", "application/json"}, consumes = {"application/json"})
+    public ResponseEntity<BaseDTO> changeBaseFields(@Parameter(in = ParameterIn.PATH, description = "base id", required = true, schema = @Schema()) @PathVariable("id") int id, @Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @Valid @RequestBody BodyBase body, BindingResult bindingResult) {
+        System.out.println("base/change" + body.getSize() + " " + body.getName() + " " + body.getPrice());
+        Base baseForUpdate = baseService.findById(id);
+        Base newBase = convertToBaseFromBody(body);
+
+        baseValidator.validate(newBase, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder errorMsg = new StringBuilder();
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors) {
+                errorMsg.append(error.getField()).append(" - ")
+                        .append(error.getDefaultMessage())
+                        .append(";");
+            }
+            throw new EntityNotCreatedException(errorMsg.toString());
+        }
+
+        baseForUpdate = baseService.update(baseForUpdate, newBase);
+        return ResponseEntity.ok(convertBaseToDTO(baseForUpdate));
+    }
+
+
+    private BaseDTO convertBaseToDTO(Base base) {
+        return modelMapper.map(base, BaseDTO.class);
+    }
+
+    private Base convertToBaseFromBody(BodyBase body) {
+        return modelMapper.map(body, Base.class);
+    }
+
     private Pizza convertToPizzaFromBody(BodyAddPizza body) {
         Pizza pizza = new Pizza(body.getName(), body.getPrice(), body.getImage());
         return pizza;
@@ -215,19 +276,19 @@ public class AdminRestController implements AdminControllerInterface {
         return modelMapper.map(addBody, Cafe.class);
     }
 
-    private PizzaDTO convertPizzaToDto(Pizza pizza){
+    private PizzaDTO convertPizzaToDto(Pizza pizza) {
         return modelMapper.map(pizza, PizzaDTO.class);
     }
 
-    private Ingredient convertBodyToIngredient(BodeAddIngredient body){
+    private Ingredient convertBodyToIngredient(BodeAddIngredient body) {
         return modelMapper.map(body, Ingredient.class);
     }
 
-    private IngredientDTO convertIngredirntToDto(Ingredient ingredient){
+    private IngredientDTO convertIngredirntToDto(Ingredient ingredient) {
         return modelMapper.map(ingredient, IngredientDTO.class);
     }
 
-    private Person convertToPersonFromBody(BodyUserEdit body){
+    private Person convertToPersonFromBody(BodyUserEdit body) {
         return modelMapper.map(body, Person.class);
     }
 
@@ -240,7 +301,7 @@ public class AdminRestController implements AdminControllerInterface {
     }
 
     @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleCreatedException(PersonNotCreatedException e) {
+    private ResponseEntity<ErrorResponse> handleCreatedException(EntityNotCreatedException e) {
         ErrorResponse response = new ErrorResponse(
                 e.getMessage(), System.currentTimeMillis()
         );

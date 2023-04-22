@@ -36,11 +36,11 @@ public class BaseService {
     }
 
     @Transactional
-    public void create(Base base) {
-        Base newBase = new Base(base.getSize(), base.getName(), base.getPrice());
+    public Base create(Base base) {
+//        Base newBase = new Base(base.getSize(), base.getName(), base.getPrice());
         //DONE save tp BD
-        logger.info("Add new base {}", newBase.getName());
-        baseRepository.save(newBase);
+        logger.info("Add new base {}", base.getName());
+        return baseRepository.save(base);
     }
 
     public List<Base> findAllSorted() {
@@ -56,5 +56,13 @@ public class BaseService {
     public Base update(Base base) {
         logger.info("Update base {}", base.getId() + "/" + base.getName());
         return baseRepository.save(base);
+    }
+    @Transactional
+    public Base update(Base baseUpdate, Base baseBody) {
+        logger.info("Update base {}", baseUpdate.getId() + "/" + baseBody.getName());
+        baseUpdate.setName(baseBody.getName());
+        baseUpdate.setSize(baseBody.getSize());
+        baseUpdate.setPrice(baseBody.getPrice());
+        return baseRepository.save(baseUpdate);
     }
 }

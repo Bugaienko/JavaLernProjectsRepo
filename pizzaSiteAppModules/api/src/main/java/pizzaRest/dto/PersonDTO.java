@@ -4,6 +4,7 @@ package pizzaRest.dto;
 
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import pizzaRest.models.Person;
 
 import javax.validation.constraints.Email;
@@ -19,12 +20,15 @@ public class PersonDTO {
     private int id;
 
     @Pattern(regexp = "([a-zA-Z]+[\\w\\s]*){3,}", message = "The username must contain only letters, numbers, underscores. Not shorter than 3 characters.")
+    @Schema(example = "username", description = "")
     private String username;
     @NotEmpty(message = "Password should be not empty")
     @Size(min = 3, message = "Password must be at least 3 characters long")
+    @Schema(example = "password", description = "")
     private String password;
     @Email
     @NotEmpty(message = "Email should be not empty")
+    @Schema(example = "user@mail.com", description = "")
     private String email;
     private String role;
     private String avatar;
