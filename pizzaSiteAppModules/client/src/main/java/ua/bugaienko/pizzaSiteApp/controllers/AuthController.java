@@ -82,6 +82,7 @@ public class AuthController {
 //            }
 //        }
 //        else {
+        System.out.println(person);
             personValidator.validate(person, bindingResult);
             personValidator.validate(person, rePassword, bindingResult);
 
