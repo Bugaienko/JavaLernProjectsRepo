@@ -152,7 +152,7 @@ public interface AdminControllerInterface {
 
             @ApiResponse(responseCode = "404", description = "Incorrect data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BadDataResponse404.class))) })
     @PostMapping(value = "/api/admin/base/add", produces = { "application/json", "application/json" }, consumes = { "application/json" })
-    ResponseEntity<BaseDTO> addNewBase(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @RequestBody @NotBlank BodyBaseS body, BindingResult bindingResult);
+    ResponseEntity<BaseDTO> addNewBase(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @RequestBody @Valid BodyBaseS body, BindingResult bindingResult);
 
 
     @Operation(summary = "Change base (Admin only)", description = "Change base", security = {
