@@ -1,5 +1,7 @@
 package pizzaRest.dto;
 
+import org.springframework.validation.annotation.Validated;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
@@ -7,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
  * @author Sergii Bugaienko
  */
 
+@Validated
 public class BodyAddCafe {
 
 

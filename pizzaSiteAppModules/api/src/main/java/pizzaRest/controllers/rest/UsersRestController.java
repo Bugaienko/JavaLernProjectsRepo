@@ -79,7 +79,7 @@ public class UsersRestController implements UsersControllerInt {
     }
 
     @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleCreatedException(PersonNotCreatedException e) {
+    private ResponseEntity<ErrorResponse> handleCreatedException(EntityNotCreatedException e) {
         ErrorResponse response = new ErrorResponse(
                 e.getMessage(), System.currentTimeMillis()
         );
@@ -127,7 +127,7 @@ public class UsersRestController implements UsersControllerInt {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new PersonNotCreatedException(errorMsg.toString());
+            throw new EntityNotCreatedException(errorMsg.toString());
         }
         Person person = convertToPerson(personDto);
         personService.register(person);
@@ -152,7 +152,7 @@ public class UsersRestController implements UsersControllerInt {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new PersonNotCreatedException(errorMsg.toString());
+            throw new EntityNotCreatedException(errorMsg.toString());
         }
 
         personService.update(activePerson, person);
@@ -234,7 +234,7 @@ public class UsersRestController implements UsersControllerInt {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new PersonNotCreatedException(errorMsg.toString());
+            throw new EntityNotCreatedException(errorMsg.toString());
         }
 
         personService.register(person);

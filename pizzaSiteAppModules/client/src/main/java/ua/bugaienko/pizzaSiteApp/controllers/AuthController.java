@@ -84,6 +84,7 @@ public class AuthController {
 //        else {
             personValidator.validate(person, bindingResult);
             personValidator.validate(person, rePassword, bindingResult);
+        System.out.println(person);
 
             if (bindingResult.hasErrors()) {
                 return "auth/registration";

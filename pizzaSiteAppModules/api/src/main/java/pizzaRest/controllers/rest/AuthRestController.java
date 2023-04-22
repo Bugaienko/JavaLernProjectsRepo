@@ -24,7 +24,7 @@ import pizzaRest.security.JwtUtil;
 import pizzaRest.services.PersonService;
 import pizzaRest.util.ErrorResponse;
 import pizzaRest.util.NotFoundException;
-import pizzaRest.util.PersonNotCreatedException;
+import pizzaRest.util.EntityNotCreatedException;
 import pizzaRest.util.PersonValidator;
 
 import javax.validation.Valid;
@@ -107,7 +107,7 @@ public class AuthRestController implements AuthControllerInt {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new PersonNotCreatedException(errorMsg.toString());
+            throw new EntityNotCreatedException(errorMsg.toString());
         }
 
         personService.register(person);
@@ -136,7 +136,7 @@ public class AuthRestController implements AuthControllerInt {
     }
 
     @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleCreatedException(PersonNotCreatedException e) {
+    private ResponseEntity<ErrorResponse> handleCreatedException(EntityNotCreatedException e) {
         ErrorResponse response = new ErrorResponse(
                 e.getMessage(), System.currentTimeMillis()
         );

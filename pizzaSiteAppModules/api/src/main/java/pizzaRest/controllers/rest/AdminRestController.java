@@ -8,10 +8,12 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pizzaRest.controllers.interfases.AdminControllerInterface;
@@ -22,6 +24,7 @@ import pizzaRest.services.*;
 import pizzaRest.util.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +68,7 @@ public class AdminRestController implements AdminControllerInterface {
     @PostMapping(value = "/cafe/add", produces = {"application/json"}, consumes = {"application/json"})
     public ResponseEntity<CafeDTO> createCafe(@Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @Valid @RequestBody BodyAddCafe body) {
         Cafe newCafe = convertToCafeFromBody(body);
+        //TODO validate cafe
         cafeService.create(newCafe);
         logger.info("Create new cafe {}", newCafe.getTitle());
         return ResponseEntity.ok(convertCafeToDTO(newCafe));
@@ -156,7 +160,7 @@ public class AdminRestController implements AdminControllerInterface {
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new PersonNotCreatedException(errorMsg.toString());
+            throw new EntityNotCreatedException(errorMsg.toString());
         }
 
         personService.update(activePerson, person);
@@ -183,6 +187,7 @@ public class AdminRestController implements AdminControllerInterface {
     public ResponseEntity<PizzaDTO> createPizza(BodyAddPizza body, BindingResult bindingResult) {
         Pizza pizza = convertToPizzaFromBody(body);
 
+        //TODO test validation
         pizzaValidator.validate(pizza, bindingResult);
 
         if (bindingResult.hasErrors()) {
@@ -200,6 +205,36 @@ public class AdminRestController implements AdminControllerInterface {
         pizza = pizzaService.createNewFromBody(pizza, body.getBaseId());
         return ResponseEntity.ok(convertPizzaToDto(pizza));
     }
+
+    @Override
+    @PostMapping(value = "/base/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = { "application/json" })
+    public ResponseEntity<BaseDTO> addNewBase(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @RequestBody @Valid @NotBlank  BodyBaseS body, BindingResult bindingResult) {
+        System.out.println("base/add " + body.getSize() + " " + body.getName() + " " + body.getPrice());
+
+        if (bindingResult.hasErrors()) {
+            //TODO
+            System.out.println("Error valid");
+            StringBuilder errorMsg = new StringBuilder();
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors) {
+                errorMsg.append(error.getField()).append(" - ")
+                        .append(error.getDefaultMessage())
+                        .append(";");
+            }
+            throw new EntityNotCreatedException(errorMsg.toString());
+        }
+        //TODO
+        return ResponseEntity.ok(new BaseDTO());
+    }
+
+    @Override
+    @PostMapping(value = "/base/change/{id}", produces = { "application/json", "application/json" }, consumes = { "application/json" })
+    public ResponseEntity<BaseDTO> changeBaseFields(@Parameter(in = ParameterIn.PATH, description = "base id", required=true, schema=@Schema()) @PathVariable("id") int id, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody BodyBaseS body, BindingResult bindingResult) {
+        System.out.println("base/change" + body.getSize() + " " + body.getName() + " " + body.getPrice());
+        //TODO
+        return null;
+    }
+
 
     private Pizza convertToPizzaFromBody(BodyAddPizza body) {
         Pizza pizza = new Pizza(body.getName(), body.getPrice(), body.getImage());
@@ -240,7 +275,8 @@ public class AdminRestController implements AdminControllerInterface {
     }
 
     @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleCreatedException(PersonNotCreatedException e) {
+    private ResponseEntity<ErrorResponse> handleCreatedException(EntityNotCreatedException e) {
+        System.out.println("handleCreatedException");
         ErrorResponse response = new ErrorResponse(
                 e.getMessage(), System.currentTimeMillis()
         );

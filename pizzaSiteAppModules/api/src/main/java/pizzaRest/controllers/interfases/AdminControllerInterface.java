@@ -19,6 +19,7 @@ import pizzaRest.dto.responsesModel.BadDataResponse404;
 import pizzaRest.dto.responsesModel.UpdateUserResponse200;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
 
@@ -134,11 +135,36 @@ public interface AdminControllerInterface {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PizzaDTO.class))),
 
-            @ApiResponse(responseCode = "403", description = "Access denied", content = @Content(mediaType = "apllication/json", schema = @Schema(implementation = AdminOnlyResponse403.class))),
+            @ApiResponse(responseCode = "401", description = "Access denied", content = @Content(mediaType = "apllication/json", schema = @Schema(implementation = AdminOnlyResponse403.class))),
 
             @ApiResponse(responseCode = "404", description = "Incorrect data", content = @Content(mediaType = "apllication/json", schema = @Schema(implementation = BadDataResponse404.class))) })
     @PostMapping(value = "/api/admin/pizza/create", produces = { "application/json", "apllication/json" }, consumes = { "application/json" })
     ResponseEntity<PizzaDTO> createPizza(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody BodyAddPizza body, BindingResult bindingResult);
+
+
+
+    @Operation(summary = "Add base (Admin only)", description = "Add base", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BaseDTO.class))),
+
+            @ApiResponse(responseCode = "401", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminOnlyResponse403.class))),
+
+            @ApiResponse(responseCode = "404", description = "Incorrect data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BadDataResponse404.class))) })
+    @PostMapping(value = "/api/admin/base/add", produces = { "application/json", "application/json" }, consumes = { "application/json" })
+    ResponseEntity<BaseDTO> addNewBase(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @RequestBody @NotBlank BodyBaseS body, BindingResult bindingResult);
+
+
+    @Operation(summary = "Change base (Admin only)", description = "Change base", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BaseDTO.class))),
+
+            @ApiResponse(responseCode = "401", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminOnlyResponse403.class))),
+
+            @ApiResponse(responseCode = "404", description = "Incorrect data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BadDataResponse404.class))) })
+    @PostMapping(value = "/api/admin/base/change/{id}", produces = { "application/json", "application/json" }, consumes = { "application/json" })
+    ResponseEntity<BaseDTO> changeBaseFields(@Parameter(in = ParameterIn.PATH, description = "base id", required=true, schema=@Schema()) @PathVariable("id") int id, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody BodyBaseS body, BindingResult bindingResult);
 
 
 

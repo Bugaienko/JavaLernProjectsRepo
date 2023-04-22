@@ -554,7 +554,7 @@ paths:
         '401':
           description: Access denied
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -564,7 +564,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -595,7 +595,7 @@ paths:
         '401':
           description: Access denied
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -605,7 +605,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -641,7 +641,7 @@ paths:
         '401':
           description: Access denied
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -651,7 +651,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -678,7 +678,7 @@ paths:
         '401':
           description: Access denied
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -688,7 +688,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -715,7 +715,7 @@ paths:
         '403':
           description: Access denied
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -725,7 +725,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -734,7 +734,7 @@ paths:
                     example: "The data entered is not correct"
 
 
-  #New methods
+#New methods
   /api/admin/pizza/change/{pizzaId}:
     post:
       summary: Change pizza (Admin only)
@@ -759,7 +759,7 @@ paths:
         '403':
           description: Access denied
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -769,7 +769,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -800,7 +800,7 @@ paths:
         '403':
           description: Access denied
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -810,7 +810,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -839,7 +839,7 @@ paths:
         '403':
           description: Access denied
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -849,7 +849,7 @@ paths:
         '404':
           description: Incorrect data
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -882,7 +882,7 @@ paths:
         '403':
           description: Access denied
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
@@ -892,13 +892,77 @@ paths:
         '404':
           description: Incorrect data
           content:
-            application/json:
+            appllication/json:
               schema:
                 type: object
                 properties:
                   message:
                     type: string
                     example: "The data entered is not correct"
+
+  /api/base/all:
+    get:
+      summary: Get all bases
+      tags:
+        - Bases
+      operationId: get all bases
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Base'
+        '403':
+          description: Access denied
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Only admins are allowed access"
+
+  /api/base/{id}:
+    get:
+      summary: Get base by id
+      description: Get base
+      operationId: get one base
+      tags:
+        - Bases
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200' :
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Base'
+        '403':
+          description: Access denied
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Only admins are allowed access"
+        '404':
+          description: Incorrect data
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The data entered is not correct"
+
 
 
 
